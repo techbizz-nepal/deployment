@@ -1,9 +1,12 @@
-## Create folder for {project} and clone this repo
-
+## Create folder {project} change directory to it.
+### Clone the repo
 ```
 git clone git@github.com:techbizz-nepal/deployment.git 
 ```
-
+### Create Makefile from this gists
+```
+https://gist.github.com/susantp/cc3933204be17cf07f06a80b6d468ad9
+```
 ## Inside Project root run these steps to start the project
 
 ### give permission to run the script
