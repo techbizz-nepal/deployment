@@ -1,7 +1,7 @@
 ## Create folder for {project} and clone this repo
 
 ```
-git clone git@github.com:techbizz-nepal/deployment.git .
+git clone git@github.com:techbizz-nepal/deployment.git 
 ```
 
 ## Inside Project root run these steps to start the project
