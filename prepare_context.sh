@@ -7,6 +7,7 @@ SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
 
 
 if [ "$FIRST_ARG" = "build" ]; then
+  cp $SCRIPT_DIR/.env.example $SCRIPT_DIR/.env
   create_sql_file_if_not_exist "$MYSQL_ENTRY_POINT_CREATE_MAIN_DB_CONTENT" "$MAIN_DB_FILE_PATH"
   create_sql_file_if_not_exist "$MYSQL_ENTRY_POINT_CREATE_TEST_DB_CONTENT" "$TEST_DB_FILE_PATH"
   docker_build
