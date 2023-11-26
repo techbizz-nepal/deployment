@@ -1,0 +1,109 @@
+version: "3"
+
+services:
+
+  nginx:
+    image: "${PROJECT_NAME}/nginx:1.0"
+    restart: unless-stopped
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: "${PROJECT_NAME}_nginx"
+    ports:
+      - '80:80'
+    volumes:
+      - ./../src:/var/www
+      - ./nginx/log:/var/log/nginx
+    networks:
+      - backend
+
+  app:
+    container_name: "${PROJECT_NAME}_php"
+    image: "${PROJECT_NAME}/app:0.1"
+    build:
+      context: ./php-fpm
+      dockerfile: Dockerfile
+      args:
+        PUID: ${PUID}
+        PGID: ${PGID}
+    restart: unless-stopped
+    environment:
+      PHP_MEMORY_LIMIT: "${PHP_MEMORY_LIMIT}"
+      PHP_IDE_CONFIG: serverName=gravity
+      XDEBUG_CONFIG: idekey=PHPSTORM
+      COMPOSER_MEMORY_LIMIT: '-1'
+    volumes:
+      - ./../src:/var/www
+#      - ./packages:/var/packages
+    ports:
+      - '9000:9000'
+    networks:
+      backend:
+        aliases:
+          - keyedu.test
+    depends_on:
+      - mysql
+      - nginx
+
+  mysql:
+    container_name: "${PROJECT_NAME}_mysql"
+    image: "${PROJECT_NAME}/mysql:1.0"
+    build: ./mysql
+    volumes:
+      - ~/.${PROJECT_NAME}/data/mysql:/var/lib/mysql
+      - ${MYSQL_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      TZ: ${TIMEZONE}
+    networks:
+      - backend
+
+  test_db:
+    container_name: "${PROJECT_NAME}_test_db"
+    image: "${PROJECT_NAME}/test_db:1.0"
+    build: ./mysql
+    volumes:
+      - ~/.${PROJECT_NAME}/data/test_db:/var/lib/mysql
+      - ${MYSQL_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
+    ports:
+      - "3307:3306"
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      TZ: ${TIMEZONE}
+    networks:
+      - backend
+
+  pma:
+    container_name: "${PROJECT_NAME}_pma"
+    image: phpmyadmin/phpmyadmin
+    links:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - "8090:80"
+    networks:
+      - backend
+    depends_on:
+      - mysql
+
+  mailhog:
+    build: ./mail-hog
+    image: "${PROJECT_NAME}/mail-hog:1.0"
+    container_name: "${PROJECT_NAME}_mail-hog"
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
