@@ -9,3 +9,7 @@ docker_up() {
 docker_down() {
   docker-compose -f $DOCKER_COMPOSE_FILE_PATH down
 }
+
+build_app() {
+  docker-compose -f $DOCKER_COMPOSE_FILE_PATH exec app cd application && composer install
+}

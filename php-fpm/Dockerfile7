@@ -1,0 +1,64 @@
+FROM php:7.4-fpm-bullseye
+
+
+USER root
+
+# Install system dependencies
+RUN pecl install xdebug-2.9.2 && \
+    docker-php-ext-enable xdebug && \
+    rm -r /tmp/pear/*
+
+RUN apt update && apt install -y \
+            libxpm-dev \
+            libfreetype6-dev \
+            libwebp-dev \
+            libjpeg-dev \
+            libpng-dev \
+            build-essential \
+            libssl-dev \
+            zlib1g-dev \
+            libxml2-dev \
+            libzip-dev \
+            libmcrypt-dev \
+            libonig-dev \
+            zip \
+            curl \
+            unzip \
+            vim \
+            supervisor
+
+# Install PHP extensions
+RUN docker-php-ext-configure pcntl --enable-pcntl \
+    && docker-php-ext-install sockets \
+    && docker-php-ext-enable sockets \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install pcntl mbstring intl exif pdo_mysql mysqli zip bcmath \
+    && docker-php-source delete
+RUN docker-php-ext-configure gd \
+            --enable-gd \
+            --with-jpeg \
+            --with-webp \
+            --with-xpm \
+            --with-freetype \
+    && docker-php-ext-install gd
+
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Get latest Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY ./conf.d/php.ini /usr/local/etc/php/php.ini
+COPY ./conf.d/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+COPY ./conf.d/error_reporting.ini /usr/local/etc/php/conf.d/error_reporting.ini
+
+# Add a non-root user to prevent files being created with root permissions on host machine.
+ARG PGID
+ARG PUID
+RUN groupadd -g ${PGID} apache && \
+    useradd -l -u ${PUID} -g apache -m apache && \
+    usermod -p "*" apache -s /bin/bash
+
+# Set working directory
+WORKDIR /var/www
+
+USER $user
