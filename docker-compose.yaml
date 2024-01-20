@@ -12,7 +12,7 @@ services:
     ports:
       - '80:80'
     volumes:
-      - ./../src:/var/www
+      - ${APP_SRC}:/var/www
       - ./nginx/log:/var/log/nginx
     networks:
       - backend
@@ -33,14 +33,14 @@ services:
       XDEBUG_CONFIG: idekey=PHPSTORM
       COMPOSER_MEMORY_LIMIT: '-1'
     volumes:
-      - ./../src:/var/www
+      - ${APP_SRC}:/var/www
 #      - ./packages:/var/packages
     ports:
       - '9000:9000'
     networks:
       backend:
         aliases:
-          - keyedu.test
+          - ${PROJECT_NAME}.test
     depends_on:
       - mysql
       - nginx
@@ -50,7 +50,7 @@ services:
     image: "${PROJECT_NAME}/mysql:1.0"
     build: ./mysql
     volumes:
-      - ~/.${PROJECT_NAME}/data/mysql:/var/lib/mysql
+      - ./data/mysql:/var/lib/mysql
       - ${MYSQL_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
     ports:
       - "3306:3306"
@@ -66,7 +66,7 @@ services:
     image: "${PROJECT_NAME}/test_db:1.0"
     build: ./mysql
     volumes:
-      - ~/.${PROJECT_NAME}/data/test_db:/var/lib/mysql
+      - ./data/test_db:/var/lib/mysql
       - ${MYSQL_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
     ports:
       - "3307:3306"
