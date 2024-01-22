@@ -22,7 +22,7 @@ services:
     image: "${PROJECT_NAME}/app:0.1"
     build:
       context: ./php-fpm
-      dockerfile: Dockerfile7
+      dockerfile: ${APP_DOCKERFILE}
       args:
         PUID: ${PUID}
         PGID: ${PGID}

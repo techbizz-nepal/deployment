@@ -14,7 +14,7 @@ if [ "$FIRST_ARG" = "build" ]; then
   create_sql_file_if_not_exist "$MYSQL_ENTRY_POINT_CREATE_TEST_DB_CONTENT" "$TEST_DB_FILE_PATH"
   docker_build
   docker_up
-#  build_app
+  build_app
 fi
 
 if [ "$FIRST_ARG" = "up" ]; then

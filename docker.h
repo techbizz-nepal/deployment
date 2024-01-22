@@ -11,5 +11,8 @@ docker_down() {
 }
 
 build_app() {
-  docker-compose -f $DOCKER_COMPOSE_FILE_PATH exec app cd application && composer install
+  docker-compose -f $DOCKER_COMPOSE_FILE_PATH exec app composer install
+#  docker-compose -f $DOCKER_COMPOSE_FILE_PATH exec app chown -R $(id -u):www-data storage
+#  docker-compose -f $DOCKER_COMPOSE_FILE_PATH exec app chown -R $(id -u):www-data bootstrap
+#  docker-compose -f $DOCKER_COMPOSE_FILE_PATH exec app php artisan storage:link
 }

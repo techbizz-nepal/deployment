@@ -61,4 +61,5 @@ RUN groupadd -g ${PGID} apache && \
 # Set working directory
 WORKDIR /var/www
 
-USER $user
+USER ${PUID}
+EXPOSE 9000
