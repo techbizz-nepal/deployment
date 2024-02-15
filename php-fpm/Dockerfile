@@ -1,4 +1,4 @@
-FROM php:8.2.0-fpm-bullseye
+FROM php:8.3.0-fpm-bullseye
 USER root
 RUN apt-get update && apt-get install -y \
             git \
@@ -43,7 +43,7 @@ RUN docker-php-ext-configure gd \
     && docker-php-ext-install gd
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
-COPY ./conf.d/php.ini /usr/local/etc/php/php.ini
+#COPY ./conf.d/php.ini /usr/local/etc/php/php.ini
 COPY ./conf.d/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 COPY ./conf.d/error_reporting.ini /usr/local/etc/php/conf.d/error_reporting.ini
 # Add a non-root user to prevent files being created with root permissions on host machine.
