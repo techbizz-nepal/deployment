@@ -49,8 +49,10 @@ COPY ./conf.d/error_reporting.ini /usr/local/etc/php/conf.d/error_reporting.ini
 # Add a non-root user to prevent files being created with root permissions on host machine.
 ARG PGID
 ARG PUID
-RUN groupadd -g ${PGID} apache && \
-    useradd -l -u ${PUID} -g apache -m apache && \
+RUN if ! getent group ${PGID} >/dev/null; then \
+        groupadd -g ${PGID} apache; \
+    fi && \
+    useradd -l -u ${PUID} -g ${PGID} -m apache && \
     usermod -p "*" apache -s /bin/bash
 
 ###########################################################################
@@ -65,4 +67,4 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 WORKDIR /var/www
 
 USER ${PUID}
-EXPOSE 9000
+EXPOSE 9000 8000

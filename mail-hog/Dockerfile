@@ -1,4 +1,4 @@
-FROM mailhog/mailhog
+FROM mailhog/mailhog:latest
 
 LABEL maintainer="Mahmoud Zalt <mahmoud@zalt.me>"
 
