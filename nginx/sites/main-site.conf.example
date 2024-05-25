@@ -16,12 +16,15 @@ server {
     # ssl_certificate /etc/nginx/ssl/api_thamelmart_test.csr;
     # ssl_certificate_key /etc/nginx/ssl/api_thamelmart_test.key;
 
-    server_name tailor.booking.local;
+    server_name ~^(?<env>[a-z]+)-(?<country>[a-z]+)\.techbizz.local$;
+
+    #server_name ecommerce.local localhost;
+
     root /var/www/public;
     index index.php index.html index.htm;
 
     location / {
-         try_files $uri $uri/ /index.php$is_args$args;
+        try_files $uri $uri/ /index.php$is_args$args;
     }
 
     location ~ \.php$ {
@@ -31,6 +34,8 @@ server {
         fastcgi_buffers 16 16k;
         fastcgi_buffer_size 32k;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param APP_COUNTRY $country;
+        fastcgi_param APP_ENV $env;
         #fixes timeouts
         fastcgi_read_timeout 600;
         include fastcgi_params;
