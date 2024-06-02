@@ -1,4 +1,4 @@
-FROM php:8.3.0-fpm-bullseye
+FROM php:8.3-rc-fpm-bullseye
 USER root
 RUN apt-get update && apt-get install -y \
             git \
@@ -12,15 +12,19 @@ RUN apt-get update && apt-get install -y \
             zlib1g-dev \
             libxml2-dev \
             libzip-dev \
+            librdkafka-dev \
             zip \
             curl \
+            make \
             unzip \
             vim \
             supervisor
 RUN pecl install -o -f redis \
+&&  pecl install -o -f rdkafka \
 &&  pecl install -o -f xdebug \
 &&  rm -rf /tmp/pear \
 &&  docker-php-ext-enable redis \
+&& docker-php-ext-enable rdkafka \
 && docker-php-ext-enable xdebug
 RUN docker-php-ext-configure pcntl --enable-pcntl \
     && docker-php-ext-install sockets \
@@ -32,8 +36,8 @@ RUN docker-php-ext-configure pcntl --enable-pcntl \
     && docker-php-ext-install pdo_mysql \
     && docker-php-ext-install mysqli \
     && docker-php-ext-install zip \
-    && docker-php-source delete
-RUN docker-php-ext-configure gd \
+    && docker-php-source delete \
+    && docker-php-ext-configure gd \
             --enable-gd \
             --with-jpeg \
             --with-webp \
