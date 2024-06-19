@@ -1,7 +1,4 @@
-version: "3"
-
 services:
-
   nginx:
     image: "${PROJECT_NAME}/nginx:1.0"
     restart: unless-stopped
