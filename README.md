@@ -5,7 +5,7 @@ git clone git@github.com:techbizz-nepal/deployment.git
 ```
 ### Run this for Makefile
 ```
-curl https://gist.githubusercontent.com/susantp/cc3933204be17cf07f06a80b6d468ad9/raw/607cba4c017ca71d32832dd1985caead8d3d0054/Makefile | >> Makefile
+curl https://gist.githubusercontent.com/susantp/cc3933204be17cf07f06a80b6d468ad9/raw/8c3a7a5788c48c165f8f25738bd06823e3a77864/Makefile | >> Makefile
 ```
 ## Inside Project root run these steps to start the project
 
