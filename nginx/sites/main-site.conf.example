@@ -36,6 +36,8 @@ server {
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         fastcgi_param APP_COUNTRY $country;
         fastcgi_param APP_ENV $env;
+        fastcgi_param APP_URL $host;
+
         #fixes timeouts
         fastcgi_read_timeout 600;
         include fastcgi_params;
