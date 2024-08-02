@@ -34,6 +34,7 @@ printf "nginx site file looks ok.\n\n"
 if [ "$FIRST_ARG" = "build" ]; then
   create_sql_file_if_not_exist "$MYSQL_ENTRY_POINT_CREATE_MAIN_DB_CONTENT" "$MAIN_DB_FILE_PATH"
   create_sql_file_if_not_exist "$MYSQL_ENTRY_POINT_CREATE_TEST_DB_CONTENT" "$TEST_DB_FILE_PATH"
+  docker_down
   docker_build
   docker_up
   init_app
