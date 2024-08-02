@@ -2,8 +2,6 @@
 
 FIRST_ARG="$1"
 
-SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
-
 DOCKER_COMPOSE_FILE_PATH="$SCRIPT_DIR/docker-compose.yaml"
 
 MYSQL_CONTEXT_PATH=$SCRIPT_DIR/mysql
