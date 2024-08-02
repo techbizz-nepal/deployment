@@ -6,24 +6,29 @@ SCRIPT_DIR=$(dirname "$(realpath "$0")")
 . "$SCRIPT_DIR"/headers/mysql.h
 . "$SCRIPT_DIR"/headers/docker.h
 . "$SCRIPT_DIR"/headers/validate_env.h
+. "$SCRIPT_DIR"/headers/app.h
 ################################################
 
+printf "Validating .env file...\n\n"
 if ! [ -f "$SCRIPT_DIR/.env" ]; then
   cp "$SCRIPT_DIR"/.env.example "$SCRIPT_DIR"/.env
     ################################################
     # Update or add PUID and PGID in the .env file
-    printf "Validating .env file...\n\n"
+
     update_env_var "PUID" "$DEFAULT_PUID" "$ENV_FILE"
     update_env_var "PGID" "$DEFAULT_PGID" "$ENV_FILE"
     printf ".env file validated.\n\n"
     ################################################
 fi
+printf ".env file looks ok.\n\n"
 
+printf "Validating nginx site file...\n\n"
 if ! [ -f "$NGINX_REAL_SITE_PATH" ]; then
-  printf "Validating nginx site file...\n\n"
+
   cp "$NGINX_EXAMPLE_SITE_PATH" "$NGINX_REAL_SITE_PATH"
   printf "nginx site file validated.\n\n"
 fi
+printf "nginx site file looks ok.\n\n"
 
 
 if [ "$FIRST_ARG" = "build" ]; then
