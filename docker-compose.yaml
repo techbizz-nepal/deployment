@@ -14,7 +14,23 @@ services:
       - ./nginx/log:/var/log/nginx
     networks:
       - backend
-
+  admin_ui:
+    container_name: "${PROJECT_NAME}_admin_ui"
+    image: "${PROJECT_NAME}/admin_ui:0.1"
+    build:
+      context: ./js-runtime
+      dockerfile: Dockerfile
+      args: &defaultArgs
+        PUID: ${PUID}
+        PGID: ${PGID}
+    ports:
+      - '3000:3000'
+    networks:
+      frontend:
+        aliases:
+          - ${PROJECT_NAME}_adminUI.test
+    depends_on:
+      - app
   app:
     container_name: "${PROJECT_NAME}_php"
     image: "${PROJECT_NAME}/app:0.1"
@@ -22,8 +38,7 @@ services:
       context: ./php-fpm
       dockerfile: Dockerfile
       args:
-        PUID: ${PUID}
-        PGID: ${PGID}
+        <<: *defaultArgs
     restart: unless-stopped
     environment:
       PHP_MEMORY_LIMIT: "${PHP_MEMORY_LIMIT}"
@@ -103,5 +118,7 @@ services:
       - backend
 
 networks:
-  backend:
+  frontend: &frontend
     driver: bridge
+  backend:
+    <<: *frontend
