@@ -1,10 +1,14 @@
 init_app(){
   install_packages
-
+  run_migrations
   if ! env_file_exists >> /dev/null 2>&1; then
     cp_env
     generate_key
   fi
+}
+
+run_migrations(){
+  docker-compose -f $DOCKER_COMPOSE_FILE_PATH exec app php artisan migrate
 }
 
 install_packages(){
