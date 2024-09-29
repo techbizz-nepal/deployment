@@ -14,7 +14,23 @@ services:
       - ./nginx/log:/var/log/nginx
     networks:
       - backend
+      - frontend
 
+  admin:
+    container_name: "${PROJECT_NAME}_admin"
+    image: node:latest
+    build:
+      context: ./admin
+      dockerfile: Dockerfile
+    volumes:
+      - ./../../js/ecommerce-admin:/var/www
+    ports:
+      - "3000:3000"
+    networks:
+      - frontend
+      - backend
+    working_dir: "/var/www"
+    entrypoint: ["/bin/bash", "-c", "pnpm i && pnpm dev"]
   app:
     container_name: "${PROJECT_NAME}_php"
     image: "${PROJECT_NAME}/app:0.1"
@@ -37,7 +53,8 @@ services:
     networks:
       backend:
         aliases:
-          - ${PROJECT_NAME}.test
+          - ${PROJECT_NAME}.local
+      frontend:
     depends_on:
       - mysql
       - nginx
@@ -103,4 +120,6 @@ services:
 
 networks:
   backend:
+    driver: bridge
+  frontend:
     driver: bridge
