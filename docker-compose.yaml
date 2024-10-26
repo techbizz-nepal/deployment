@@ -10,7 +10,7 @@ services:
       - '80:80'
       - '443:443'
     volumes:
-      - ${APP_SRC}:/var/www
+      - ${API_SRC}:/var/www
       - ./nginx/log:/var/log/nginx
     networks:
       - backend
