@@ -31,8 +31,7 @@ services:
       XDEBUG_CONFIG: idekey=PHPSTORM
       COMPOSER_MEMORY_LIMIT: '-1'
     volumes:
-      - ${APP_SRC}:/var/www
-#      - ./packages:/var/packages
+      - ${API_SRC}:/var/www
     ports:
       - '9000:9000'
     networks:
