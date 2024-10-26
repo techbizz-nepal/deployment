@@ -23,7 +23,7 @@ services:
       context: ./admin
       dockerfile: Dockerfile
     volumes:
-      - ./../../js/ecommerce-admin:/var/www
+      - ${ADMIN_SRC}:/var/www
     ports:
       - "3000:3000"
     networks:
