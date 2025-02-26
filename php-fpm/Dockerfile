@@ -1,4 +1,4 @@
-FROM php:8.4-fpm-bullseye
+FROM php:8.4-fpm-bullseye as builder
 USER root
 RUN apt-get update && apt-get install -y \
     git \
@@ -19,6 +19,9 @@ RUN apt-get update && apt-get install -y \
     unzip \
     vim \
     supervisor
+
+FROM builder as build1
+
 RUN pecl install -o -f redis \
     &&  pecl install -o -f rdkafka \
     &&  pecl install -o -f xdebug \
@@ -46,6 +49,7 @@ RUN docker-php-ext-configure pcntl --enable-pcntl \
     # docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install gd
 
+FROM build1
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 #COPY ./conf.d/php.ini /usr/local/etc/php/php.ini
 COPY ./conf.d/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
