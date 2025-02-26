@@ -10,7 +10,7 @@ services:
       - '80:80'
       - '443:443'
     volumes:
-      - ${API_SRC}:/var/www
+      - ${APP_SRC}:/var/www
       - ./nginx/log:/var/log/nginx
     networks:
       - backend
@@ -31,7 +31,7 @@ services:
       XDEBUG_CONFIG: idekey=PHPSTORM
       COMPOSER_MEMORY_LIMIT: '-1'
     volumes:
-      - ${API_SRC}:/var/www
+      - ${APP_SRC}:/var/www
     ports:
       - '9000:9000'
     networks:
