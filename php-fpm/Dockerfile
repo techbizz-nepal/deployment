@@ -1,4 +1,4 @@
-FROM php:8.4-fpm-bullseye as builder
+FROM php:8.4-fpm-bullseye AS builder
 USER root
 RUN apt-get update && apt-get install -y \
     git \
@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install -y \
     vim \
     supervisor
 
-FROM builder as build1
+FROM builder AS build1
 
 RUN pecl install -o -f redis \
     &&  pecl install -o -f rdkafka \
