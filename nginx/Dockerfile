@@ -4,6 +4,7 @@ ENV TZ ${TZ}
 
 COPY nginx.conf /etc/nginx/
 COPY sites /etc/nginx/sites-available
+COPY sites/config /etc/nginx/conf.d
 COPY ssl /etc/nginx/ssl
 
 RUN set -x ; \
