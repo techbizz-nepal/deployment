@@ -32,8 +32,6 @@ services:
       COMPOSER_MEMORY_LIMIT: '-1'
     volumes:
       - ${APP_SRC}:/var/www
-    ports:
-      - '9000:9000'
     networks:
       backend:
         aliases:
@@ -49,8 +47,6 @@ services:
     volumes:
       - ./mysql/data/project_db:/var/lib/mysql
       - ${MYSQL_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
-    ports:
-      - "3306:3306"
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: P@$$w0rd1522
