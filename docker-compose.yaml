@@ -53,51 +53,8 @@ services:
       - "3306:3306"
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: P@$$w0rd1522
       TZ: ${TIMEZONE}
-    networks:
-      - backend
-
-  test_db:
-    container_name: "${PROJECT_NAME}_test_db"
-    image: "${PROJECT_NAME}/test_db:1.0"
-    build: ./mysql
-    volumes:
-      - ./mysql/data/test_db:/var/lib/mysql
-      - ${MYSQL_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
-    ports:
-      - "3307:3306"
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      TZ: ${TIMEZONE}
-    networks:
-      - backend
-
-  pma:
-    container_name: "${PROJECT_NAME}_pma"
-    image: phpmyadmin/phpmyadmin
-    links:
-      - mysql
-    environment:
-      PMA_HOST: mysql
-      PMA_PORT: 3306
-      PMA_ARBITRARY: 1
-    restart: always
-    ports:
-      - "8090:80"
-    networks:
-      - backend
-    depends_on:
-      - mysql
-
-  mailhog:
-    build: ./mail-hog
-    image: "${PROJECT_NAME}/mail-hog:1.0"
-    container_name: "${PROJECT_NAME}_mail-hog"
-    ports:
-      - "1025:1025"
-      - "8025:8025"
     networks:
       - backend
 
