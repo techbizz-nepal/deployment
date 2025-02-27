@@ -49,8 +49,13 @@ services:
       - ${MYSQL_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: P@$$w0rd1522
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
       TZ: ${TIMEZONE}
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
     networks:
       - backend
 
