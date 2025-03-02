@@ -1,5 +1,4 @@
 CREATE DATABASE IF NOT EXISTS {db} COLLATE 'utf8_general_ci';
 CREATE USER '{user}' @'%' IDENTIFIED BY '{password}';
 GRANT ALL PRIVILEGES ON {db}.* TO '{user}' @'%';
-GRANT SELECT ON information_schema.* TO '{user}' @'%';
 FLUSH PRIVILEGES;
