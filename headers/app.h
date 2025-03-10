@@ -9,8 +9,8 @@ init_app(){
 }
 
 manage_permissions(){
-  docker-compose -f $DOCKER_COMPOSE_FILE_PATH exec app chown -R www-data:www-data /var/www/storage
-  docker-compose -f $DOCKER_COMPOSE_FILE_PATH exec app chmod -R 775 /var/www/storage
+  docker-compose -f $DOCKER_COMPOSE_FILE_PATH exec --user=root app chown -R www-data:www-data /var/www/storage
+  docker-compose -f $DOCKER_COMPOSE_FILE_PATH exec --user=root app chmod -R 775 /var/www/storage
 }
 
 run_migrations(){
