@@ -1,16 +1,10 @@
 init_app(){
-  manage_permissions
   install_packages
   run_migrations
   if ! env_file_exists >> /dev/null 2>&1; then
     cp_env
     generate_key
   fi
-}
-
-manage_permissions(){
-  docker-compose -f $DOCKER_COMPOSE_FILE_PATH exec app chown -R www-data:www-data /var/www/storage
-  docker-compose -f $DOCKER_COMPOSE_FILE_PATH exec app chmod -R 775 /var/www/storage
 }
 
 run_migrations(){
