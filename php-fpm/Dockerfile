@@ -18,13 +18,16 @@ RUN apt-get update && apt-get install -y \
     make \
     unzip \
     vim \
-    supervisor
+    supervisor \
+    libmagickwand-dev \
+    imagemagick
 
 FROM builder AS build1
 
 RUN pecl install -o -f redis \
     &&  pecl install -o -f rdkafka \
     &&  pecl install -o -f xdebug \
+    &&  pecl install imagick \
     &&  rm -rf /tmp/pear \
     &&  docker-php-ext-enable redis \
     && docker-php-ext-enable rdkafka \
@@ -40,6 +43,7 @@ RUN docker-php-ext-configure pcntl --enable-pcntl \
     && docker-php-ext-install mysqli \
     && docker-php-ext-install zip \
     && docker-php-source delete \
+    && docker-php-ext-enable imagick \
     && docker-php-ext-configure gd \
     --enable-gd \
     --with-jpeg \
