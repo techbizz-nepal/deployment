@@ -20,14 +20,15 @@ RUN apt-get update && apt-get install -y \
     vim \
     supervisor \
     libmagickwand-dev \
-    imagemagick
+    imagemagick \
+    wget
 
 FROM builder AS build1
 
 RUN pecl install -o -f redis \
     &&  pecl install -o -f rdkafka \
     &&  pecl install -o -f xdebug \
-    &&  pecl install imagick \
+    &&  pecl install imagick-3.8.0RC2 \
     &&  rm -rf /tmp/pear \
     &&  docker-php-ext-enable redis \
     && docker-php-ext-enable rdkafka \
