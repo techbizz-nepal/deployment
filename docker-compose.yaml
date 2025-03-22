@@ -10,12 +10,14 @@ services:
       - '80:80'
       - '443:443'
     volumes:
-      - ${APP_SRC}:/var/www
+      - ${API_SRC}:/var/www
       - ./nginx/log:/var/log/nginx
+    depends_on:
+      - api
     networks:
       - backend
 
-  app:
+  api:
     container_name: "${PROJECT_NAME}_php"
     image: "${PROJECT_NAME}/app:0.1"
     build:
@@ -31,14 +33,13 @@ services:
       XDEBUG_CONFIG: idekey=PHPSTORM
       COMPOSER_MEMORY_LIMIT: '-1'
     volumes:
-      - ${APP_SRC}:/var/www
+      - ${API_SRC}:/var/www
     networks:
       backend:
         aliases:
           - ${PROJECT_NAME}.test
     depends_on:
       - mysql
-      - nginx
 
   mysql:
     container_name: "${PROJECT_NAME}_mysql"
