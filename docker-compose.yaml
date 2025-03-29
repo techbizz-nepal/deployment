@@ -10,36 +10,54 @@ services:
       - '80:80'
       - '443:443'
     volumes:
-      - ${API_SRC}:/var/www
       - ./nginx/log:/var/log/nginx
     depends_on:
-      - api
+      - consumer
+      - vendor
     networks:
       - backend
-
-  api:
-    container_name: "${PROJECT_NAME}_php"
-    image: "${PROJECT_NAME}/app:0.1"
-    build:
-      context: ./php-fpm
-      dockerfile: Dockerfile
-      args:
-        PUID: ${PUID}
-        PGID: ${PGID}
+  consumer:
+    container_name: "${PROJECT_NAME}_consumer"
+    image: "${PROJECT_NAME}/consumer:latest"
     restart: unless-stopped
+    networks:
+      - backend
+    ports:
+      - 3000:3000
+  vendor:
+    container_name: "${PROJECT_NAME}_vendor"
+    image: "${PROJECT_NAME}/vendor:latest"
+    restart: unless-stopped
+    networks:
+      - backend
+    ports:
+      - 3001:3000
+
+  frankenphp:
+    container_name: "${PROJECT_NAME}_frankenphp"
+    image: "${PROJECT_NAME}/frankenphp:latest"
+    build:
+      context: ./src/backend
+      dockerfile: Dockerfile
+    restart: always
     environment:
-      PHP_MEMORY_LIMIT: "${PHP_MEMORY_LIMIT}"
-      PHP_IDE_CONFIG: serverName=gravity
-      XDEBUG_CONFIG: idekey=PHPSTORM
-      COMPOSER_MEMORY_LIMIT: '-1'
-    volumes:
-      - ${API_SRC}:/var/www
+      USER_AGENT_KEY: "BazzarifyConsumer"
+      X_APP_KEY: "cxsQ3kyvU91Bgf7bks8dszQKdibdj83zyVOXEF99qww="
     networks:
       backend:
         aliases:
-          - ${PROJECT_NAME}.test
+          - "local-ne.larashops.local"
+    ports:
+      - 8081:8081
     depends_on:
       - mysql
+      - vendor
+      - consumer
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+      - ${API_SRC}/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - ${API_SRC}:/app
 
   mysql:
     container_name: "${PROJECT_NAME}_mysql"
@@ -63,3 +81,7 @@ services:
 networks:
   backend:
     driver: bridge
+
+volumes:
+  caddy_data:
+  caddy_config:
