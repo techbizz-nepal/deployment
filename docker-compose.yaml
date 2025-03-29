@@ -22,16 +22,16 @@ services:
     restart: unless-stopped
     networks:
       - backend
-    ports:
-      - 3000:3000
+    # ports:
+    #   - 3000:3000
   vendor:
     container_name: "${PROJECT_NAME}_vendor"
     image: "${PROJECT_NAME}/vendor:latest"
     restart: unless-stopped
     networks:
       - backend
-    ports:
-      - 3001:3000
+    # ports:
+    #   - 3001:3001
 
   frankenphp:
     container_name: "${PROJECT_NAME}_frankenphp"
@@ -47,8 +47,8 @@ services:
       backend:
         aliases:
           - "local-ne.larashops.local"
-    ports:
-      - 8081:8081
+    # ports:
+    #   - 8081:8081
     depends_on:
       - mysql
       - vendor
