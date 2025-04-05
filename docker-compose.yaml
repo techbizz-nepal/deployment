@@ -1,11 +1,11 @@
 services:
   nginx:
-    image: "${PROJECT_NAME}/nginx:1.0"
+    container_name: "${PROJECT_NAME}_nginx"
+    image: "${PROJECT_NAME}/nginx"
     restart: unless-stopped
     build:
       context: ./nginx
       dockerfile: Dockerfile
-    container_name: "${PROJECT_NAME}_nginx"
     ports:
       - '80:80'
       - '443:443'
@@ -46,37 +46,61 @@ services:
     networks:
       backend:
         aliases:
-          - "local-ne.larashops.local"
-    # ports:
-    #   - 8081:8081
+          - "local-ne.bazzarify.local"
+    ports:
+      - 8081:8081
     depends_on:
-      - mysql
-      - vendor
-      - consumer
+      - postgres
+      # - mysql
+      # - vendor
+      # - consumer
     volumes:
       - caddy_data:/data
       - caddy_config:/config
       - ${API_SRC}/caddy/Caddyfile:/etc/caddy/Caddyfile
       - ${API_SRC}:/app
-
-  mysql:
-    container_name: "${PROJECT_NAME}_mysql"
-    image: "${PROJECT_NAME}/mysql:1.0"
-    build: ./mysql
+  # mysql:
+  #   container_name: "${PROJECT_NAME}_mysql"
+  #   image: "${PROJECT_NAME}/mysql"
+  #   build: ./mysql
+  #   volumes:
+  #     - ./mysql/data/project_db:/var/lib/mysql
+  #     - ${MYSQL_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
+  #   restart: unless-stopped
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+  #     TZ: ${TIMEZONE}
+  #   healthcheck:
+  #     test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}" ]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 3
+  #   networks:
+  #     - backend
+  #   ports:
+  #     - 3306:3306
+  postgres:
+    container_name: "${PROJECT_NAME}_postgres"
+    image: "${PROJECT_NAME}/postgres"
+    build: ./postgres
     volumes:
-      - ./mysql/data/project_db:/var/lib/mysql
-      - ${MYSQL_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
+      - ./postgres/data/project_db:/var/lib/postgresql/data
+      - ${POSTGRES_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_DB: "${POSTGRES_DB}"
       TZ: ${TIMEZONE}
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}" ]
+      test: [ "CMD", "pg_isready", "-U", "${POSTGRES_USER}" ]
       interval: 10s
       timeout: 5s
       retries: 3
     networks:
       - backend
+    ports:
+      - 5432:5432
 
 networks:
   backend:
