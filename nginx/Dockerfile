@@ -1,6 +1,6 @@
 FROM nginx:alpine
 ARG TZ=UTC+05:45
-ENV TZ ${TZ}
+ENV TZ=${TZ}
 
 COPY nginx.conf /etc/nginx/
 COPY sites /etc/nginx/sites-available
