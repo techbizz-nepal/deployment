@@ -36,9 +36,9 @@ services:
   frankenphp:
     container_name: "${PROJECT_NAME}_frankenphp"
     image: "${PROJECT_NAME}/frankenphp:latest"
-    build:
-      context: ./src/backend
-      dockerfile: Dockerfile
+    # build:
+    #   context: ./src/backend
+    #   dockerfile: Dockerfile
     restart: always
     environment:
       # PHP_IDE_CONFIG: serverName=gravity
@@ -58,8 +58,8 @@ services:
     volumes:
       - caddy_data:/data
       - caddy_config:/config
-      - ${API_SRC}/caddy/Caddyfile:/etc/caddy/Caddyfile
-      - ${API_SRC}:/app
+      # - ${API_SRC}/caddy/Caddyfile:/etc/caddy/Caddyfile
+      # - ${API_SRC}:/app
   postgres:
     container_name: "${PROJECT_NAME}_postgres"
     image: "${PROJECT_NAME}/postgres"
