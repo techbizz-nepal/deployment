@@ -1,7 +1,7 @@
 services:
   nginx:
     container_name: "${PROJECT_NAME}_nginx"
-    image: "${PROJECT_NAME}/nginx"
+    image: "${PROJECT_NAME}/nginx:latest"
     restart: unless-stopped
     build:
       context: ./nginx
@@ -41,6 +41,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     environment:
+      # PHP_IDE_CONFIG: serverName=gravity
       USER_AGENT_KEY: "BazzarifyConsumer"
       X_APP_KEY: "cxsQ3kyvU91Bgf7bks8dszQKdibdj83zyVOXEF99qww="
     networks:
@@ -59,26 +60,6 @@ services:
       - caddy_config:/config
       - ${API_SRC}/caddy/Caddyfile:/etc/caddy/Caddyfile
       - ${API_SRC}:/app
-  # mysql:
-  #   container_name: "${PROJECT_NAME}_mysql"
-  #   image: "${PROJECT_NAME}/mysql"
-  #   build: ./mysql
-  #   volumes:
-  #     - ./mysql/data/project_db:/var/lib/mysql
-  #     - ${MYSQL_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
-  #   restart: unless-stopped
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
-  #     TZ: ${TIMEZONE}
-  #   healthcheck:
-  #     test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}" ]
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 3
-  #   networks:
-  #     - backend
-  #   ports:
-  #     - 3306:3306
   postgres:
     container_name: "${PROJECT_NAME}_postgres"
     image: "${PROJECT_NAME}/postgres"
