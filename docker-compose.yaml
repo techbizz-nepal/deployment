@@ -3,9 +3,9 @@ services:
     container_name: "${PROJECT_NAME}_nginx"
     image: "${PROJECT_NAME}/nginx:latest"
     restart: unless-stopped
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
+    # build:
+    #   context: ./nginx
+    #   dockerfile: Dockerfile
     ports:
       - '80:80'
       - '443:443'
