@@ -39,8 +39,6 @@ services:
       backend:
         aliases:
           - "local-ne.bazzarify.local"
-    ports:
-      - 8081:8081
     depends_on:
       - postgres
     volumes:
@@ -66,8 +64,6 @@ services:
       retries: 3
     networks:
       - backend
-    ports:
-      - 5432:5432
 
 networks:
   backend:
