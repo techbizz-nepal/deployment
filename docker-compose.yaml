@@ -48,7 +48,6 @@ services:
   postgres:
     container_name: "${PROJECT_NAME}_postgres"
     image: "${PROJECT_NAME}/postgres:latest"
-    build: ./postgres
     volumes:
       - ./postgres/data/project_db:/var/lib/postgresql/data
       - ${POSTGRES_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d:ro
