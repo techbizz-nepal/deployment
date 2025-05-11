@@ -1,8 +1,6 @@
 .env
-data/
 src/
 .idea/
 .DS_Store
-/postgres
 *.sh
 *-dev.yaml
