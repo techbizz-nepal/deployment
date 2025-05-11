@@ -1,3 +1,5 @@
+[![Build nginx and push Docker image to dockerhub](https://github.com/techbizz-nepal/deployment/actions/workflows/docker_image.yml/badge.svg?branch=bazzarify-config&event=push)](https://github.com/techbizz-nepal/deployment/actions/workflows/docker_image.yml)
+
 ## Project Overview
 
 This project is designed to assist with deploying a stack consisting of Laravel, MySQL, and Redis. It simplifies the process of setting up your application in a Docker environment with just a few commands. Follow the steps below to get started and enjoy a seamless deployment experience.

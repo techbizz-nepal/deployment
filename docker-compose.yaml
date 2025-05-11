@@ -3,9 +3,6 @@ services:
     container_name: "${PROJECT_NAME}_nginx"
     image: "${PROJECT_NAME}/nginx:latest"
     restart: unless-stopped
-    # build:
-    #   context: ./nginx
-    #   dockerfile: Dockerfile
     ports:
       - '80:80'
       - '443:443'
@@ -22,26 +19,20 @@ services:
     restart: unless-stopped
     networks:
       - backend
-    # ports:
-    #   - 3000:3000
   vendor:
     container_name: "${PROJECT_NAME}_vendor"
     image: "${PROJECT_NAME}/vendor:latest"
     restart: unless-stopped
     networks:
-      - backend
-    # ports:
-    #   - 3001:3001
+      backend:
+        aliases:
+          - "vendor.local"
 
   frankenphp:
     container_name: "${PROJECT_NAME}_frankenphp"
     image: "${PROJECT_NAME}/frankenphp:latest"
-    # build:
-    #   context: ./src/backend
-    #   dockerfile: Dockerfile
     restart: always
     environment:
-      # PHP_IDE_CONFIG: serverName=gravity
       USER_AGENT_KEY: "BazzarifyConsumer"
       X_APP_KEY: "cxsQ3kyvU91Bgf7bks8dszQKdibdj83zyVOXEF99qww="
     networks:
@@ -52,14 +43,9 @@ services:
       - 8081:8081
     depends_on:
       - postgres
-      # - mysql
-      # - vendor
-      # - consumer
     volumes:
       - caddy_data:/data
       - caddy_config:/config
-      # - ${API_SRC}/caddy/Caddyfile:/etc/caddy/Caddyfile
-      # - ${API_SRC}:/app
   postgres:
     container_name: "${PROJECT_NAME}_postgres"
     image: "${PROJECT_NAME}/postgres"
