@@ -40,17 +40,18 @@ services:
         aliases:
           - "local-ne.bazzarify.local"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     volumes:
       - caddy_data:/data
       - caddy_config:/config
   postgres:
     container_name: "${PROJECT_NAME}_postgres"
-    image: "${PROJECT_NAME}/postgres"
+    image: "${PROJECT_NAME}/postgres:latest"
     build: ./postgres
     volumes:
       - ./postgres/data/project_db:/var/lib/postgresql/data
-      - ${POSTGRES_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
+      - ${POSTGRES_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d:ro
     restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"

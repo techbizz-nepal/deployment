@@ -1,4 +1,4 @@
-name: Build nginx and push Docker image to dockerhub
+name: Build/Push Docker image to dockerhub
 
 on:
   push:
@@ -20,10 +20,21 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push to dockerhub
+      - name: Build nginx and push to dockerhub
         uses: docker/build-push-action@v5
         with:
           context: nginx
           file: nginx/Dockerfile
           push: true
           tags: techbizz/nginx:latest
+      - name: Build postgres and push to dockerhub
+        uses: docker/build-push-action@v5
+        with:
+          context: postgres
+          file: postgres/Dockerfile
+          push: true
+          tags: techbizz/postgres:latest
+          build-args: |
+            POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+            POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
