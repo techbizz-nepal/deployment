@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # Builder stage: install envsubst only
-FROM alpine:3.18 AS builder
+FROM alpine:3.21 AS builder
 RUN apk add --no-cache gettext
 
 # Final stage: lean Postgres image
