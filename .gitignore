@@ -2,5 +2,5 @@
 src/
 .idea/
 .DS_Store
-*.sh
+./*.sh
 *-dev.yaml
