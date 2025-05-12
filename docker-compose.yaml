@@ -70,13 +70,11 @@ services:
     container_name: "${PROJECT_NAME}_webhook"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: ["-hooks", "/config/hooks.json", "-verbose"]
+    command: [ "-hooks", "/config/hooks.json", "-verbose" ]
     restart: unless-stopped
     networks:
-      - backend   
-      - frontend  
-    ports:
-      - 9000:9000
+      - backend
+      - frontend
 
 networks:
   backend:
