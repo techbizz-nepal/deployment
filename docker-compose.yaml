@@ -64,6 +64,17 @@ services:
       retries: 3
     networks:
       - backend
+  webhook:
+    image: adnanh/webhook:2.8.0
+    container_name: webhook
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock    # allow control of host Docker
+      - ./webhooks/hooks.json:/etc/webhook/hooks.json:ro
+      - ./webhooks/deploy.sh:/usr/local/bin/deploy.sh:ro
+    restart: unless-stopped
+    networks:
+      - backend   
+      - frontend  
 
 networks:
   backend:

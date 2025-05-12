@@ -1,0 +1,40 @@
+[
+    {
+        "id": "deploy",
+        "execute-command": "/usr/local/bin/deploy.sh",
+        "secret": "${WEBHOOK_SECRET}",
+        "signature": {
+            "source": "header",
+            "header": "X-Hub-Signature-256",
+            "prefix": "sha256="
+        },
+        "pass-arguments-to": [
+            "-"
+        ],
+        "command-working-directory": "/srv/app",
+        "trigger-rule": {
+            "and": [
+                {
+                    "match": {
+                        "type": "value",
+                        "value": "workflow_run",
+                        "parameter": {
+                            "source": "header",
+                            "name": "X-GitHub-Event"
+                        }
+                    }
+                },
+                {
+                    "match": {
+                        "type": "value",
+                        "value": "completed",
+                        "parameter": {
+                            "source": "payload",
+                            "name": "workflow_run.conclusion"
+                        }
+                    }
+                }
+            ]
+        }
+    }
+]
