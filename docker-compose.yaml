@@ -66,7 +66,7 @@ services:
     networks:
       - backend
   webhook:
-    image: adnanh/webhook:2.8.0
+    image: theohbrothers/docker-webhook:2.8.1
     container_name: webhook
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock    # allow control of host Docker
