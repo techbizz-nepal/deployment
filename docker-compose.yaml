@@ -13,6 +13,7 @@ services:
       - vendor
     networks:
       - backend
+      - frontend
   consumer:
     container_name: "${PROJECT_NAME}_consumer"
     image: "${PROJECT_NAME}/consumer:latest"
@@ -78,6 +79,8 @@ services:
 
 networks:
   backend:
+    driver: bridge
+  frontend:
     driver: bridge
 
 volumes:
