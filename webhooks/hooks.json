@@ -2,12 +2,6 @@
     {
         "id": "deploy",
         "execute-command": "/usr/local/bin/deploy.sh",
-        "secret": "${WEBHOOK_SECRET}",
-        "signature": {
-            "source": "header",
-            "header": "X-Hub-Signature-256",
-            "prefix": "sha256="
-        },
         "pass-arguments-to": [
             "-"
         ],

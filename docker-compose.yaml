@@ -75,6 +75,8 @@ services:
     networks:
       - backend   
       - frontend  
+    ports:
+      - 9000:9000
 
 networks:
   backend:

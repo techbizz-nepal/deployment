@@ -6,17 +6,22 @@ LOGFILE="/var/log/webhook/deploy.log"
 mkdir -p "$(dirname "$LOGFILE")"
 exec >> "$LOGFILE" 2>&1
 
-echo "[\$(date '+%Y-%m-%d %H:%M:%S')] Starting deploy script"
+log(){
+  # use direct command substitution without escaping
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"
+}
+
+log "Starting deploy script"
 
 # read full JSON payload from stdin
-payload="$(cat)"
+payload=$(cat)
 
-echo "[\$(date '+%Y-%m-%d %H:%M:%S')] Payload received: $payload"
+log "Payload received: $payload"
 
 # extract GitHub repo full name
 repo_full=$(printf '%s' "$payload" | jq -r '.repository.full_name')
 
-echo "[\$(date '+%Y-%m-%d %H:%M:%S')] Detected repo: $repo_full"
+log "Detected repo: $repo_full"
 
 # map GitHub repo → services + images
 case "$repo_full" in
@@ -37,21 +42,21 @@ case "$repo_full" in
     images="techbizz/nginx:latest techbizz/postgres:latest"
     ;;
   *)
-    echo "[\$(date '+%Y-%m-%d %H:%M:%S')] ⚠️  Unrecognized repo: $repo_full; aborting."
+    log "⚠️  Unrecognized repo: $repo_full; aborting."
     exit 1
     ;;
 esac
 
-echo "[\$(date '+%Y-%m-%d %H:%M:%S')] Pulling images: $images"
+log "Pulling images: $images"
 for img in $images; do
-  echo "[\$(date '+%Y-%m-%d %H:%M:%S')] Pulling $img"
+  log "Pulling $img"
   docker pull "$img"
 done
 
-echo "[\$(date '+%Y-%m-%d %H:%M:%S')] Restarting services: $services"
+log "Restarting services: $services"
 for svc in $services; do
-  echo "[\$(date '+%Y-%m-%d %H:%M:%S')] docker-compose up -d $svc"
-  docker-compose up -d "$svc"
+  log "docker-compose -f /srv/deploy/docker-compose.yml up -d $svc"
+  docker-compose -f /srv/deploy/docker-compose.yml up -d "$svc"
 done
 
-echo "[\$(date '+%Y-%m-%d %H:%M:%S')] Deploy script completed"
+log "Deploy script completed"
