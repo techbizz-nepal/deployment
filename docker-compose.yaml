@@ -69,9 +69,10 @@ services:
     image: theohbrothers/docker-webhook:2.8.1
     container_name: webhook
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock    # allow control of host Docker
+      - /var/run/docker.sock:/var/run/docker.sock    
       - ./webhooks/hooks.json:/etc/webhook/hooks.json:ro
       - ./webhooks/deploy.sh:/usr/local/bin/deploy.sh:ro
+    command: ["-hooks", "/etc/webhook/hooks.json", "-verbose"]
     restart: unless-stopped
     networks:
       - backend   
