@@ -27,7 +27,7 @@
                 {
                     "match": {
                         "type": "value",
-                        "value": "completed",
+                        "value": "success",
                         "parameter": {
                             "source": "payload",
                             "name": "workflow_run.conclusion"
