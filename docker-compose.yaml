@@ -24,6 +24,8 @@ services:
     container_name: "${PROJECT_NAME}_vendor"
     image: "${PROJECT_NAME}/vendor:latest"
     restart: unless-stopped
+    environment:
+      - SESSION_SECRET=${SESSION_SECRET}
     networks:
       backend:
         aliases:
