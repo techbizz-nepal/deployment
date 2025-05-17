@@ -46,6 +46,7 @@ services:
     volumes:
       - caddy_data:/data
       - caddy_config:/config
+      - ./laravel.env.bak:/app/.env
   postgres:
     container_name: "${PROJECT_NAME}_postgres"
     image: "${PROJECT_NAME}/postgres:latest"
