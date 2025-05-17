@@ -28,13 +28,13 @@ jobs:
           push: true
           tags: techbizz/nginx:latest
 
-      - name: Build webhook and push to dockerhub
-        uses: docker/build-push-action@v5
-        with:
-          context: webhook
-          file: webhook/Dockerfile
-          push: true
-          tags: techbizz/webhook:latest
+      # - name: Build webhook and push to dockerhub
+      #   uses: docker/build-push-action@v5
+      #   with:
+      #     context: webhook
+      #     file: webhook/Dockerfile
+      #     push: true
+      #     tags: techbizz/webhook:latest
 
       - name: Build postgres and push to dockerhub
         uses: docker/build-push-action@v5
