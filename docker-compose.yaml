@@ -19,7 +19,7 @@ services:
     image: "${PROJECT_NAME}/consumer:latest"
     restart: unless-stopped
     environment:
-      - APP_KEY=${X_APP_KEY}
+      - X_APP_KEY=${X_APP_KEY}
     networks:
       - backend
   vendor:
