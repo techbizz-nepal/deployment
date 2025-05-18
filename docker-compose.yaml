@@ -18,6 +18,8 @@ services:
     container_name: "${PROJECT_NAME}_consumer"
     image: "${PROJECT_NAME}/consumer:latest"
     restart: unless-stopped
+    environment:
+      - APP_KEY=${X_APP_KEY}
     networks:
       - backend
   vendor:
@@ -37,7 +39,7 @@ services:
     restart: always
     environment:
       USER_AGENT_KEY: "BazzarifyConsumer"
-      X_APP_KEY: "cxsQ3kyvU91Bgf7bks8dszQKdibdj83zyVOXEF99qww="
+      X_APP_KEY: ${X_APP_KEY}
     networks:
       backend:
         aliases:
