@@ -3,6 +3,8 @@ services:
     container_name: "${PROJECT_NAME}_nginx"
     image: "${PROJECT_NAME}/nginx:latest"
     restart: unless-stopped
+    environment:
+      - ALLOWED_USER_AGENT=${ALLOWED_USER_AGENT}
     ports:
       - '80:80'
       - '443:443'
