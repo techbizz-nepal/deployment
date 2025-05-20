@@ -4,9 +4,9 @@ ENV TZ=${TZ}
 
 COPY nginx.conf /etc/nginx/
 COPY sites /etc/nginx/sites-available
-COPY sites/config /etc/nginx/conf.d
+COPY config /etc/nginx/conf.d
 COPY ssl /etc/nginx/ssl
-COPY nginx/config /etc/nginx/templates
+COPY templates /etc/nginx/templates
 RUN set -x ; \
     addgroup -g 82 -S www-data ; \
     adduser -u 82 -D -S -G www-data www-data && exit 0 ; exit 1
