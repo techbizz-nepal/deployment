@@ -71,17 +71,6 @@ services:
       retries: 3
     networks:
       - backend
-  # webhook:
-  #   image: "${PROJECT_NAME}/webhook:latest"
-  #   container_name: "${PROJECT_NAME}_webhook"
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #   command: [ "-hooks", "/config/hooks.json", "-verbose" ]
-  #   restart: unless-stopped
-  #   networks:
-  #     - backend
-  #     - frontend
-
 networks:
   backend:
     driver: bridge
