@@ -8,6 +8,7 @@ services:
       dockerfile: dev.Dockerfile
     restart: always
     environment:
+      PHP_POST_MAX_SIZE: 64M
       PHP_IDE_CONFIG: serverName=gravity
       USER_AGENT_KEY: "BazzarifyConsumer"
       X_APP_KEY: "cxsQ3kyvU91Bgf7bks8dszQKdibdj83zyVOXEF99qww="
@@ -17,12 +18,18 @@ services:
           - "local-ne.bazzarify.local"
     ports:
       - 8081:8081
+      - 2019:2019
     depends_on:
       - postgres
+    entrypoint: |
+      php -d variables_order=EGPCS artisan octane:frankenphp
+      --host=*.bazzarify.local
+      --port=8081
+      --caddyfile=/app/caddy/dev.Caddyfile
+      --workers=1
     volumes:
       - caddy_data:/data
       - caddy_config:/config
-      - ${API_SRC}/caddy/Caddyfile:/etc/caddy/Caddyfile
       - ${API_SRC}:/app
   postgres:
     container_name: "${PROJECT_NAME}_postgres"
