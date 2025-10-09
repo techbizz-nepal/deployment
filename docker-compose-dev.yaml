@@ -19,13 +19,13 @@ services:
     restart: always
     environment:
       PHP_POST_MAX_SIZE: 64M
-      PHP_IDE_CONFIG: serverName=gravity
+      PHP_IDE_CONFIG: idekey=PHPSTORM
       USER_AGENT_KEY: "BazzarifyConsumer"
       X_APP_KEY: "cxsQ3kyvU91Bgf7bks8dszQKdibdj83zyVOXEF99qww="
     networks:
       backend:
         aliases:
-          - "local-ne.bazzarify.local"
+          - "local-ne.larashops.local"
     ports:
       - 8081:8081
       - 2019:2019
@@ -33,7 +33,7 @@ services:
       - postgres
     entrypoint: |
       php -d variables_order=EGPCS artisan octane:frankenphp
-      --host=*.bazzarify.local
+      --host=*.larashops.local
       --port=8081
       --caddyfile=/app/caddy/dev.Caddyfile
       --workers=1
