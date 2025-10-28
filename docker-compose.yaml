@@ -45,7 +45,7 @@ services:
     networks:
       backend:
         aliases:
-          - "local-ne.bazzarify.local"
+          - "local-ne.larashops.local"
     depends_on:
       postgres:
         condition: service_healthy
