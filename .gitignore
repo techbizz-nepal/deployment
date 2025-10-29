@@ -4,3 +4,4 @@ src/
 .DS_Store
 *.sh
 docker-compose.override.yaml
+Makefile
