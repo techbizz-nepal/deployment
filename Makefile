@@ -31,6 +31,9 @@ down-dev: ## Stop dev stack
 logs-dev: ## Tail logs from dev stack
 	$(DOCKER_COMPOSE) -f docker-compose-dev.yaml logs -f
 
+exec: ## Execute container
+	$(DOCKER_COMPOSE) exec 
+
 help: ## Show this help
 	@echo "$(CYAN)Available commands:$(NC)"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' Makefile | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-15s %s\n", $$1, $$2}'
