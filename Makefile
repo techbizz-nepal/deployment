@@ -6,7 +6,7 @@ CYAN := \033[36m
 NC := \033[0m
 
 # Compose commands
-DOCKER_COMPOSE = docker-compose
+DOCKER_COMPOSE = docker compose
 
 # Main targets
 up: ## Start prod stack (docker-compose.yaml)
