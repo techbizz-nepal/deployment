@@ -1,17 +1,15 @@
 services:
   redis:
-    image: redis:latest
     container_name: "${PROJECT_NAME}_redis"
+    image: redis:latest
     restart: always
-    ports:
-      - "6379:6379"
     volumes:
       - ./redis/data:/data
     networks:
       - backend
   nginx:
     container_name: "${PROJECT_NAME}_nginx"
-    image: "${PROJECT_NAME}/nginx:latest"
+    image: "${PROJECT_NAME}/nginx:latest-${ARCHITECTURE}"
     restart: unless-stopped
     environment:
       - ALLOWED_USER_AGENT=${ALLOWED_USER_AGENT}
@@ -28,7 +26,7 @@ services:
       - frontend
   consumer:
     container_name: "${PROJECT_NAME}_consumer"
-    image: "${PROJECT_NAME}/consumer:latest"
+    image: "${PROJECT_NAME}/consumer:latest-${ARCHITECTURE}"
     restart: unless-stopped
     environment:
       - X_APP_KEY=${X_APP_KEY}
@@ -36,7 +34,7 @@ services:
       - backend
   vendor:
     container_name: "${PROJECT_NAME}_vendor"
-    image: "${PROJECT_NAME}/vendor:latest"
+    image: "${PROJECT_NAME}/vendor:latest-${ARCHITECTURE}"
     restart: unless-stopped
     environment:
       - SESSION_SECRET=${SESSION_SECRET}
@@ -50,7 +48,7 @@ services:
 
   frankenphp:
     container_name: "${PROJECT_NAME}_frankenphp"
-    image: "${PROJECT_NAME}/frankenphp:latest"
+    image: "${PROJECT_NAME}/frankenphp:latest-${ARCHITECTURE}"
     restart: always
     environment:
       USER_AGENT_KEY: "BazzarifyConsumer"
@@ -67,7 +65,7 @@ services:
       - caddy_config:/config
   postgres:
     container_name: "${PROJECT_NAME}_postgres"
-    image: "${PROJECT_NAME}/postgres:latest"
+    image: "${PROJECT_NAME}/postgres:latest-${ARCHITECTURE}"
     volumes:
       - ./postgres/data/project_db:/var/lib/postgresql/data
       - ${POSTGRES_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d:ro
