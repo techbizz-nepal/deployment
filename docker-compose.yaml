@@ -60,6 +60,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    ports:
+      - 8081:8081
     volumes:
       - caddy_data:/data
       - caddy_config:/config
@@ -80,8 +82,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
-    ports:
-      - 5432:5432
     networks:
       - backend
 networks:
