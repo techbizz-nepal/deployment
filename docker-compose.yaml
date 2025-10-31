@@ -40,6 +40,9 @@ services:
     restart: unless-stopped
     environment:
       - SESSION_SECRET=${SESSION_SECRET}
+      - SESSION_DOMAIN=${SESSION_DOMAIN}
+      - API_URL=${API_URL}
+      - APP_KEY=${APP_KEY}
     networks:
       backend:
         aliases:
