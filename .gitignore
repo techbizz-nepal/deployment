@@ -1,4 +1,4 @@
-.env
+.env*
 src/
 .idea/
 .DS_Store
