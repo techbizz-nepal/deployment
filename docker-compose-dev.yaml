@@ -12,7 +12,7 @@ services:
 
   frankenphp:
     container_name: "${PROJECT_NAME}_frankenphp"
-    image: "${PROJECT_NAME}/frankenphp:latest"
+    image: "${PROJECT_NAME}/frankenphp:latest-dev"
     build:
       context: ./src/backend
       dockerfile: dev.Dockerfile
@@ -22,6 +22,8 @@ services:
       PHP_IDE_CONFIG: "serverName=gravity"
       USER_AGENT_KEY: "BazzarifyConsumer"
       X_APP_KEY: "cxsQ3kyvU91Bgf7bks8dszQKdibdj83zyVOXEF99qww="
+    env_file:
+      - src/backend/.env.local
     networks:
       backend:
         aliases:
@@ -43,7 +45,7 @@ services:
       - ${API_SRC}:/app
   postgres:
     container_name: "${PROJECT_NAME}_postgres"
-    image: "${PROJECT_NAME}/postgres"
+    image: "${PROJECT_NAME}/postgres:latest-${ARCHITECTURE}"
     build: 
       dockerfile: Dockerfile
       context: ./postgres
