@@ -14,7 +14,6 @@ services:
     environment:
       - ALLOWED_USER_AGENT=${ALLOWED_USER_AGENT}
     ports:
-      - '80:80'
       - '443:443'
     volumes:
       - ./nginx/log:/var/log/nginx
