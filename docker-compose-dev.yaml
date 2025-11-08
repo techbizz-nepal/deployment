@@ -12,7 +12,7 @@ services:
 
   frankenphp:
     container_name: "${PROJECT_NAME}_frankenphp"
-    image: "${PROJECT_NAME}/frankenphp:latest-dev"
+    image: "${PROJECT_NAME}/frankenphp:latest-${ARCHITECTURE}"
     build:
       context: ./src/backend
       dockerfile: dev.Dockerfile
