@@ -81,7 +81,7 @@ services:
     depends_on:
       - consumer
       - vendor
-      - blog
+      # - blog
     networks:
       - backend
       - frontend
