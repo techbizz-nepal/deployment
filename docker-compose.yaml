@@ -1,10 +1,13 @@
 services:
   redis:
     container_name: "${PROJECT_NAME}_redis"
-    image: redis:latest
+    image: "${PROJECT_NAME}/redis:latest-${ARCHITECTURE}"
+    build:
+      context: ./redis
+      dockerfile: Dockerfile
     restart: always
     volumes:
-      - ./redis/data:/data
+      - ./redis/data:/var/lib/redis/
     networks:
       - backend
   consumer:

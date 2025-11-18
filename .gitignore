@@ -4,3 +4,4 @@ src/
 .DS_Store
 docker-compose.override.yaml
 *.bak
+terraform/

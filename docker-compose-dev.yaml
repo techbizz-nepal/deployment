@@ -1,14 +1,22 @@
 services:
   redis:
-    image: redis:latest
     container_name: "${PROJECT_NAME}_redis"
+    image: "${PROJECT_NAME}/redis:latest-${ARCHITECTURE}"
+    build:
+      context: ./redis
+      dockerfile: Dockerfile
     restart: always
     ports:
       - "6379:6379"
     volumes:
-      - ./redis/data:/data
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redis/data:/var/lib/redis/
+      - ./redis/logs:/var/log/redis:r
     networks:
-      - backend
+      backend:
+        aliases:
+          - redis
+          - redis.internal
 
   frankenphp:
     container_name: "${PROJECT_NAME}_frankenphp"
