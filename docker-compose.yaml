@@ -27,6 +27,9 @@ services:
       - SESSION_DOMAIN=${SESSION_DOMAIN}
       - API_URL=${API_URL}
       - APP_KEY=${APP_KEY}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     networks:
       backend:
         aliases:
