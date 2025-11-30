@@ -32,7 +32,9 @@ COPY --from=builder /usr/lib/libintl.so* /usr/lib/
 COPY initdb/create-db-sample.sql.template /docker-entrypoint-initdb.d/create-db-sample.sql.template
 COPY initdb/init-db.sh                 /docker-entrypoint-initdb.d/init-db.sh
 RUN chmod +x /docker-entrypoint-initdb.d/init-db.sh
+# Copy low-memory postgres config
+COPY postgresql.lowmem.conf /etc/postgresql/postgresql.conf
 
 EXPOSE 5432
 ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["postgres"]
+CMD ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]

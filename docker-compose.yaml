@@ -10,6 +10,8 @@ services:
       - ./redis/data:/var/lib/redis/
     networks:
       - backend
+    mem_limit: 120m
+    cpus: 0.20
   consumer:
     container_name: "${PROJECT_NAME}_consumer"
     image: "${PROJECT_NAME}/consumer:latest-${ARCHITECTURE}"
@@ -18,6 +20,8 @@ services:
       - X_APP_KEY=${X_APP_KEY}
     networks:
       - backend
+    mem_limit: 120m
+    cpus: 0.20
   vendor:
     container_name: "${PROJECT_NAME}_vendor"
     image: "${PROJECT_NAME}/vendor:latest-${ARCHITECTURE}"
@@ -34,6 +38,8 @@ services:
       backend:
         aliases:
           - "vendor.local"
+    mem_limit: 150m
+    cpus: 0.20
   frankenphp:
     container_name: "${PROJECT_NAME}_frankenphp"
     image: "${PROJECT_NAME}/frankenphp:latest-${ARCHITECTURE}"
@@ -51,13 +57,36 @@ services:
     volumes:
       - caddy_data:/data
       - caddy_config:/config
+    mem_limit: 350m
+    cpus: 0.50
+  
+  pgbouncer:
+    container_name: "${PROJECT_NAME}_pgbouncer"
+    image: "${PROJECT_NAME}/pgbouncer:latest-${ARCHITECTURE}"
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./pgbouncer/pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini
+    networks:
+      - backend
+    mem_limit: 30m
+    cpus: 0.05
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "localhost", "-p", "6432", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+
   postgres:
     container_name: "${PROJECT_NAME}_postgres"
     image: "${PROJECT_NAME}/postgres:latest-${ARCHITECTURE}"
     volumes:
       - ./postgres/data/project_db:/var/lib/postgresql/data
       - ${POSTGRES_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d:ro
-    restart: unless-stopped
+    restart: always
     environment:
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
       POSTGRES_USER: "${POSTGRES_USER}"
@@ -72,6 +101,8 @@ services:
       - backend
     ports:
       - 5432:5432
+    mem_limit: 300m
+    cpus: 0.25
 
   nginx:
     container_name: "${PROJECT_NAME}_nginx"
@@ -91,6 +122,8 @@ services:
     networks:
       - backend
       - frontend
+    mem_limit: 80m
+    cpus: 0.10
       # - blog_net
 ##--------------------------------------##
 #    Blog Stack                         #
