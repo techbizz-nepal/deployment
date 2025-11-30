@@ -17,6 +17,8 @@ services:
         aliases:
           - redis
           - redis.internal
+    mem_limit: 120m
+    cpus: 0.20
 
   frankenphp:
     container_name: "${PROJECT_NAME}_frankenphp"
@@ -38,7 +40,12 @@ services:
           - "local-ne.larashops.local"
     ports:
       - 8081:8081
-      - 2019:2019
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8081/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
     depends_on:
       pgbouncer:
         condition: service_healthy
@@ -52,6 +59,8 @@ services:
       - caddy_data:/data
       - caddy_config:/config
       - ${API_SRC}:/app
+    mem_limit: 350m
+    cpus: 0.50
 
   pgbouncer:
     container_name: "${PROJECT_NAME}_pgbouncer"
@@ -108,6 +117,8 @@ services:
       - backend
     ports:
       - 5432:5432
+    mem_limit: 300m
+    cpus: 0.25
 
 ##--------------------------------------##
 #    Blog Stack                         #

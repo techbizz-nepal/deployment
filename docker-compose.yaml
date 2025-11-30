@@ -12,6 +12,27 @@ services:
       - backend
     mem_limit: 120m
     cpus: 0.20
+  
+  nginx:
+    container_name: "${PROJECT_NAME}_nginx"
+    image: "${PROJECT_NAME}/nginx:latest-${ARCHITECTURE}"
+    restart: unless-stopped
+    environment:
+      - ALLOWED_USER_AGENT=${ALLOWED_USER_AGENT}
+    ports:
+      - '443:443'
+    volumes:
+      - ./nginx/log:/var/log/nginx
+      # - blog_data:/var/www/html:rw
+    depends_on:
+      - consumer
+      - vendor
+      # - blog
+    networks:
+      - backend
+      - frontend
+    mem_limit: 80m
+    cpus: 0.10
   consumer:
     container_name: "${PROJECT_NAME}_consumer"
     image: "${PROJECT_NAME}/consumer:latest-${ARCHITECTURE}"
@@ -20,6 +41,9 @@ services:
       - X_APP_KEY=${X_APP_KEY}
     networks:
       - backend
+    depends_on:
+      frankenphp:
+        condition: service_healthy
     mem_limit: 120m
     cpus: 0.20
   vendor:
@@ -38,6 +62,9 @@ services:
       backend:
         aliases:
           - "vendor.local"
+    depends_on:
+      frankenphp:
+        condition: service_healthy
     mem_limit: 150m
     cpus: 0.20
   frankenphp:
@@ -51,6 +78,12 @@ services:
       backend:
         aliases:
           - "local-ne.larashops.local"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8081/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
     depends_on:
       pgbouncer:
         condition: service_healthy
@@ -106,95 +139,12 @@ services:
     mem_limit: 300m
     cpus: 0.25
 
-  nginx:
-    container_name: "${PROJECT_NAME}_nginx"
-    image: "${PROJECT_NAME}/nginx:latest-${ARCHITECTURE}"
-    restart: unless-stopped
-    environment:
-      - ALLOWED_USER_AGENT=${ALLOWED_USER_AGENT}
-    ports:
-      - '443:443'
-    volumes:
-      - ./nginx/log:/var/log/nginx
-      # - blog_data:/var/www/html:rw
-    depends_on:
-      - consumer
-      - vendor
-      # - blog
-    networks:
-      - backend
-      - frontend
-    mem_limit: 80m
-    cpus: 0.10
-      # - blog_net
-##--------------------------------------##
-#    Blog Stack                         #
-##--------------------------------------##
-  # mysql:
-  #     image: mysql:8.0
-  #     container_name: "${PROJECT_NAME}_mysql"
-  #     restart: unless-stopped
-  #     command: --default-authentication-plugin=mysql_native_password --innodb-buffer-pool-size=256M
-  #     environment:
-  #       MYSQL_DATABASE: ${WORDPRESS_DB_NAME}
-  #       MYSQL_USER: ${WORDPRESS_DB_USER}
-  #       MYSQL_PASSWORD: ${WORDPRESS_DB_PASSWORD}
-  #       MYSQL_ROOT_PASSWORD: ${WORDPRESS_DB_PASSWORD}
-  #     volumes:
-  #       - ./mysql/data:/var/lib/mysql
-  #     networks:
-  #       - blog_net
-  #     healthcheck:
-  #       test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -proot_pass"]
-  #       interval: 10s
-  #       timeout: 5s
-  #       retries: 5
-
-  # blog:
-  #   image: wordpress:6.8.3-fpm-alpine
-  #   container_name: "${PROJECT_NAME}_blog"
-  #   restart: unless-stopped
-  #   environment:
-  #     WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
-  #     WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
-  #     WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
-  #     WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
-  #   volumes:
-  #     - blog_data:/var/www/html:rw
-  #   depends_on:
-  #     - mysql
-  #   networks:
-  #     blog_net:
-  #       aliases:
-  #         - "blog.larashops.local"
-  #         - "blog.bazarify.com.np"
-  #         - "blog.bazzarify.com"
-  #         - "blog.bazzarify.local"
-
-  # phpmyadmin:
-  #     image: phpmyadmin:latest
-  #     container_name: "${PROJECT_NAME}_phpmyadmin"
-  #     restart: unless-stopped
-  #     ports:
-  #       - "8082:80"
-  #     environment:
-  #       PMA_HOST: mysql
-  #       PMA_USER: root
-  #       PMA_PASSWORD: root_pass
-  #       UPLOAD_LIMIT: 64M
-  #     depends_on:
-  #       - mysql
-  #     networks:
-  #       - blog_net
 networks:
   backend:
     driver: bridge
   frontend:
     driver: bridge
-  # blog_net:
-  #   driver: bridge
 
 volumes:
   caddy_data:
   caddy_config:
-  # blog_data:
