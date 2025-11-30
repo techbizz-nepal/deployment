@@ -52,7 +52,7 @@ services:
         aliases:
           - "local-ne.larashops.local"
     depends_on:
-      postgres:
+      pgbouncer:
         condition: service_healthy
     volumes:
       - caddy_data:/data
@@ -71,6 +71,9 @@ services:
       - ./pgbouncer/pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini
     networks:
       - backend
+    depends_on:
+      postgres:
+        condition: service_healthy
     mem_limit: 30m
     cpus: 0.05
     healthcheck:

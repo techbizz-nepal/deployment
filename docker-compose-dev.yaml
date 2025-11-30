@@ -40,7 +40,8 @@ services:
       - 8081:8081
       - 2019:2019
     depends_on:
-      - postgres
+      pgbouncer:
+        condition: service_healthy
     entrypoint: |
       php -d variables_order=EGPCS artisan octane:frankenphp
       --host=*.larashops.local
@@ -66,6 +67,9 @@ services:
       - ./pgbouncer/pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini
     networks:
       - backend
+    depends_on:
+      postgres:
+        condition: service_healthy
     mem_limit: 30m
     cpus: 0.05
     healthcheck:
@@ -96,7 +100,7 @@ services:
       POSTGRES_DB: "${POSTGRES_DB}"
       TZ: ${TIMEZONE}
     healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "${POSTGRES_USER}" ]
+      test: [ "CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}" ]
       interval: 10s
       timeout: 5s
       retries: 3
