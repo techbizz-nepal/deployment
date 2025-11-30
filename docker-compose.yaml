@@ -78,8 +78,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
-    ports:
-      - 6432:6432
 
   postgres:
     container_name: "${PROJECT_NAME}_postgres"

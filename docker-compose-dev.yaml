@@ -51,6 +51,31 @@ services:
       - caddy_data:/data
       - caddy_config:/config
       - ${API_SRC}:/app
+
+  pgbouncer:
+    container_name: "${PROJECT_NAME}_pgbouncer"
+    image: "${PROJECT_NAME}/pgbouncer:latest-${ARCHITECTURE}"
+    build:
+      context: ./pgbouncer
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./pgbouncer/pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini
+    networks:
+      - backend
+    mem_limit: 30m
+    cpus: 0.05
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "localhost", "-p", "6432", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    ports:
+      - 6432:6432
+
   postgres:
     container_name: "${PROJECT_NAME}_postgres"
     image: "${PROJECT_NAME}/postgres:latest-${ARCHITECTURE}"
