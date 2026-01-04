@@ -5,20 +5,22 @@ services:
     build:
       context: ./redis
       dockerfile: Dockerfile
-    restart: always
+    restart: unless-stopped
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
     volumes:
       - ./redis/data:/var/lib/redis/
     networks:
       - backend
     mem_limit: 120m
     cpus: 0.20
-  
+
   nginx:
     container_name: "${PROJECT_NAME}_nginx"
     image: "${PROJECT_NAME}/nginx:latest-${ARCHITECTURE}"
     restart: unless-stopped
     environment:
-      - ALLOWED_USER_AGENT=${ALLOWED_USER_AGENT}
+      ALLOWED_USER_AGENT: ${ALLOWED_USER_AGENT}
     ports:
       - '443:443'
     volumes:
@@ -51,13 +53,13 @@ services:
     image: "${PROJECT_NAME}/vendor:latest-${ARCHITECTURE}"
     restart: unless-stopped
     environment:
-      - SESSION_SECRET=${SESSION_SECRET}
-      - SESSION_DOMAIN=${SESSION_DOMAIN}
-      - API_URL=${API_URL}
-      - APP_KEY=${APP_KEY}
-      - REDIS_HOST=${REDIS_HOST}
-      - REDIS_PORT=${REDIS_PORT}
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      SESSION_SECRET: ${SESSION_SECRET}
+      SESSION_DOMAIN: ${SESSION_DOMAIN}
+      API_URL: ${API_URL}
+      APP_KEY: ${APP_KEY}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
     networks:
       backend:
         aliases:
@@ -72,6 +74,7 @@ services:
     image: "${PROJECT_NAME}/frankenphp:latest-${ARCHITECTURE}"
     restart: always
     environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
       USER_AGENT_KEY: "BazzarifyConsumer"
       X_APP_KEY: ${X_APP_KEY}
     networks:
@@ -79,7 +82,7 @@ services:
         aliases:
           - "local-ne.larashops.local"
     healthcheck:
-      test: ["CMD-SHELL", "curl -fsS http://localhost:8081/health || exit 1"]
+      test: [ "CMD-SHELL", "curl -fsS http://localhost:8081/health || exit 1" ]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -92,7 +95,7 @@ services:
       - caddy_config:/config
     mem_limit: 350m
     cpus: 0.50
-  
+
   pgbouncer:
     container_name: "${PROJECT_NAME}_pgbouncer"
     image: "${PROJECT_NAME}/pgbouncer:latest-${ARCHITECTURE}"
@@ -110,7 +113,7 @@ services:
     mem_limit: 30m
     cpus: 0.05
     healthcheck:
-      test: ["CMD", "pg_isready", "-h", "localhost", "-p", "6432", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
+      test: [ "CMD", "pg_isready", "-h", "localhost", "-p", "6432", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}" ]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -148,3 +151,4 @@ networks:
 volumes:
   caddy_data:
   caddy_config:
+  redis_volume:
