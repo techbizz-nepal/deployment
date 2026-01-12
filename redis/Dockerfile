@@ -8,4 +8,4 @@ RUN mkdir -p /var/lib/redis/appendonly && \
 
 USER redis
 
-CMD ["redis-server", "/usr/local/etc/redis/redis.conf"]
+CMD ["sh", "-c", "redis-server /usr/local/etc/redis/redis.conf --requirepass \"$REDIS_PASSWORD\""]
