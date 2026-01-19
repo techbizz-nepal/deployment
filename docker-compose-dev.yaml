@@ -1,4 +1,19 @@
 services:
+  static-runner:
+    container_name: "${PROJECT_NAME}_static-runner"
+    image: "${PROJECT_NAME}/app-runner:latest-${ARCHITECTURE}"
+    build:
+      context: ./src/backend
+      dockerfile: static-runner.Dockerfile
+    platform: linux/amd64
+    ports:
+      - "8000:80"
+    networks:
+      backend:
+        aliases:
+          - static-runner
+          - static-runner.internal
+
   redis:
     container_name: "${PROJECT_NAME}_redis"
     image: "${PROJECT_NAME}/redis:latest-${ARCHITECTURE}"
