@@ -1,13 +1,15 @@
 services:
   static-runner:
     container_name: "${PROJECT_NAME}_static-runner"
-    image: "${PROJECT_NAME}/app-runner:latest-${ARCHITECTURE}"
+    image: "${PROJECT_NAME}/frankenphp:static-gnu"
     build:
       context: ./src/backend
-      dockerfile: static-runner.Dockerfile
+      dockerfile: static.Dockerfile
+      args:
+        - GITHUB_TOKEN=${GITHUB_TOKEN}
     platform: linux/amd64
     ports:
-      - "8000:80"
+      - "9000:80"
     networks:
       backend:
         aliases:
@@ -27,6 +29,8 @@ services:
       - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
       - ./redis/data:/var/lib/redis/
       - ./redis/logs:/var/log/redis:r
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     networks:
       backend:
         aliases:
@@ -41,6 +45,8 @@ services:
     build:
       context: ./src/backend
       dockerfile: dev.Dockerfile
+      args:
+        - GITHUB_TOKEN=${GITHUB_TOKEN}
     restart: always
     environment:
       PHP_POST_MAX_SIZE: 64M
