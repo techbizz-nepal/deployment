@@ -70,17 +70,21 @@ services:
     depends_on:
       pgbouncer:
         condition: service_healthy
-    entrypoint: |
-      php -d variables_order=EGPCS artisan octane:frankenphp
-      --host=*.larashops.local
-      --port=8081
-      --caddyfile=/app/caddy/dev.Caddyfile
-      --workers=1
+    entrypoint:
+      - php
+      - -d
+      - variables_order=EGPCS
+      - artisan
+      - octane:frankenphp
+      - --host=0.0.0.0
+      - --port=8081
+      - --caddyfile=/app/caddy/dev.Caddyfile
+      - --workers=1
     volumes:
       - caddy_data:/data
       - caddy_config:/config
       - ${API_SRC}:/app
-    mem_limit: 350m
+    mem_limit: 1536m
     cpus: 0.50
 
   pgbouncer:
