@@ -38,3 +38,11 @@ Happy building! 🚀
 By following these steps, you should have a fully functional Laravel, MySQL, and Redis stack running in Docker. If you encounter any issues or have questions, feel free to open an issue on the repository or consult the documentation.
 
 Happy coding, and enjoy your streamlined development and deployment process! 😊
+
+## Queue Runtime Notes
+
+- production async workloads such as product CSV import now expect:
+  - `QUEUE_CONNECTION=redis`
+  - a dedicated `queue-worker` service running `php artisan queue:work redis ...`
+- the application container and worker both read the same queue connection so import processing can dispatch from web requests and complete in the background
+- if you intentionally force `QUEUE_CONNECTION=sync`, imports still work, but they run inline and you lose the intended background progress behavior

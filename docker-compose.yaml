@@ -77,6 +77,7 @@ services:
       REDIS_PASSWORD: ${REDIS_PASSWORD}
       USER_AGENT_KEY: "BazzarifyConsumer"
       X_APP_KEY: ${X_APP_KEY}
+      QUEUE_CONNECTION: ${QUEUE_CONNECTION:-redis}
     networks:
       backend:
         aliases:
@@ -95,6 +96,34 @@ services:
       - caddy_config:/config
     mem_limit: 350m
     cpus: 0.50
+
+  queue-worker:
+    container_name: "${PROJECT_NAME}_queue-worker"
+    image: "${PROJECT_NAME}/frankenphp:latest-${ARCHITECTURE}"
+    restart: always
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      USER_AGENT_KEY: "BazzarifyConsumer"
+      X_APP_KEY: ${X_APP_KEY}
+      QUEUE_CONNECTION: ${QUEUE_CONNECTION:-redis}
+    networks:
+      - backend
+    depends_on:
+      pgbouncer:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    entrypoint:
+      - php
+      - artisan
+      - queue:work
+      - redis
+      - --queue=default
+      - --sleep=1
+      - --tries=1
+      - --timeout=3600
+    mem_limit: 180m
+    cpus: 0.25
 
   pgbouncer:
     container_name: "${PROJECT_NAME}_pgbouncer"
