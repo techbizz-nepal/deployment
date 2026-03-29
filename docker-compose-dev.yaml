@@ -53,6 +53,7 @@ services:
       PHP_IDE_CONFIG: "serverName=gravity"
       USER_AGENT_KEY: "BazzarifyConsumer"
       X_APP_KEY: "cxsQ3kyvU91Bgf7bks8dszQKdibdj83zyVOXEF99qww="
+      QUEUE_CONNECTION: "redis"
     env_file:
       - src/backend/.env.local
     networks:
@@ -86,6 +87,44 @@ services:
       - ${API_SRC}:/app
     mem_limit: 1536m
     cpus: 0.50
+
+  queue-worker:
+    container_name: "${PROJECT_NAME}_queue-worker"
+    image: "${PROJECT_NAME}/frankenphp:latest-${ARCHITECTURE}"
+    build:
+      context: ./src/backend
+      dockerfile: dev.Dockerfile
+      args:
+        - GITHUB_TOKEN=${GITHUB_TOKEN}
+    restart: always
+    environment:
+      PHP_POST_MAX_SIZE: 64M
+      PHP_IDE_CONFIG: "serverName=gravity"
+      USER_AGENT_KEY: "BazzarifyConsumer"
+      X_APP_KEY: "cxsQ3kyvU91Bgf7bks8dszQKdibdj83zyVOXEF99qww="
+      QUEUE_CONNECTION: "redis"
+    env_file:
+      - src/backend/.env.local
+    networks:
+      - backend
+    depends_on:
+      redis:
+        condition: service_started
+      pgbouncer:
+        condition: service_healthy
+    entrypoint:
+      - php
+      - artisan
+      - queue:work
+      - redis
+      - --queue=default
+      - --sleep=1
+      - --tries=1
+      - --timeout=3600
+    volumes:
+      - ${API_SRC}:/app
+    mem_limit: 768m
+    cpus: 0.25
 
   pgbouncer:
     container_name: "${PROJECT_NAME}_pgbouncer"
