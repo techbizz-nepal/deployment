@@ -12,8 +12,8 @@ services:
       - ./redis/data:/var/lib/redis/
     networks:
       - backend
-    mem_limit: 120m
-    cpus: 0.20
+    mem_limit: 64m
+    cpus: 0.10
 
   nginx:
     container_name: "${PROJECT_NAME}_nginx"
@@ -33,8 +33,8 @@ services:
     networks:
       - backend
       - frontend
-    mem_limit: 80m
-    cpus: 0.10
+    mem_limit: 32m
+    cpus: 0.05
   consumer:
     container_name: "${PROJECT_NAME}_consumer"
     image: "${PROJECT_NAME}/consumer:latest-${ARCHITECTURE}"
@@ -46,8 +46,8 @@ services:
     depends_on:
       frankenphp:
         condition: service_healthy
-    mem_limit: 120m
-    cpus: 0.20
+    mem_limit: 64m
+    cpus: 0.10
   vendor:
     container_name: "${PROJECT_NAME}_vendor"
     image: "${PROJECT_NAME}/vendor:latest-${ARCHITECTURE}"
@@ -67,8 +67,8 @@ services:
     depends_on:
       frankenphp:
         condition: service_healthy
-    mem_limit: 150m
-    cpus: 0.20
+    mem_limit: 80m
+    cpus: 0.10
   frankenphp:
     container_name: "${PROJECT_NAME}_frankenphp"
     image: "${PROJECT_NAME}/frankenphp:latest-${ARCHITECTURE}"
@@ -78,24 +78,37 @@ services:
       USER_AGENT_KEY: "BazzarifyConsumer"
       X_APP_KEY: ${X_APP_KEY}
       QUEUE_CONNECTION: ${QUEUE_CONNECTION:-redis}
+      PHP_POST_MAX_SIZE: 32M
+    entrypoint:
+      - php
+      - -d
+      - variables_order=EGPCS
+      - -d
+      - memory_limit=128M
+      - artisan
+      - octane:frankenphp
+      - --host=*.larashops.local
+      - --port=8081
+      - --caddyfile=/etc/caddy/Caddyfile
+      - --workers=1
     networks:
       backend:
         aliases:
           - "local-ne.larashops.local"
     healthcheck:
       test: [ "CMD-SHELL", "curl -fsS http://localhost:8081/health || exit 1" ]
-      interval: 10s
+      interval: 20s
       timeout: 5s
       retries: 3
-      start_period: 5s
+      start_period: 15s
     depends_on:
       pgbouncer:
         condition: service_healthy
     volumes:
       - caddy_data:/data
       - caddy_config:/config
-    mem_limit: 350m
-    cpus: 0.50
+    mem_limit: 160m
+    cpus: 0.35
 
   queue-worker:
     container_name: "${PROJECT_NAME}_queue-worker"
@@ -106,6 +119,7 @@ services:
       USER_AGENT_KEY: "BazzarifyConsumer"
       X_APP_KEY: ${X_APP_KEY}
       QUEUE_CONNECTION: ${QUEUE_CONNECTION:-redis}
+      PHP_POST_MAX_SIZE: 32M
     networks:
       - backend
     depends_on:
@@ -115,6 +129,8 @@ services:
         condition: service_started
     entrypoint:
       - php
+      - -d
+      - memory_limit=96M
       - artisan
       - queue:work
       - redis
@@ -122,8 +138,11 @@ services:
       - --sleep=1
       - --tries=1
       - --timeout=3600
-    mem_limit: 180m
-    cpus: 0.25
+      - --memory=64
+      - --max-jobs=50
+      - --max-time=1800
+    mem_limit: 96m
+    cpus: 0.10
 
   pgbouncer:
     container_name: "${PROJECT_NAME}_pgbouncer"
@@ -139,11 +158,11 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    mem_limit: 30m
+    mem_limit: 20m
     cpus: 0.05
     healthcheck:
       test: [ "CMD", "pg_isready", "-h", "localhost", "-p", "6432", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}" ]
-      interval: 10s
+      interval: 20s
       timeout: 5s
       retries: 3
 
@@ -168,8 +187,8 @@ services:
       - backend
     ports:
       - 5432:5432
-    mem_limit: 300m
-    cpus: 0.25
+    mem_limit: 192m
+    cpus: 0.15
 
 networks:
   backend:

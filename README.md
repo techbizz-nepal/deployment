@@ -46,3 +46,18 @@ Happy coding, and enjoy your streamlined development and deployment process! ðŸ˜
   - a dedicated `queue-worker` service running `php artisan queue:work redis ...`
 - the application container and worker both read the same queue connection so import processing can dispatch from web requests and complete in the background
 - if you intentionally force `QUEUE_CONNECTION=sync`, imports still work, but they run inline and you lose the intended background progress behavior
+
+## Micro Instance Notes
+
+- the committed production compose file is tuned to survive on a very small single-node EC2 host such as `t2.micro`, prioritizing uptime over throughput
+- this profile assumes:
+  - very low traffic
+  - Redis-backed queues remain enabled
+  - a dedicated `queue-worker` still runs, but at reduced memory and throughput
+  - host swap is configured (`1-2 GB` recommended)
+- expected tradeoffs:
+  - slower web responses under pressure
+  - slower queue/import completion
+  - very low safe concurrency
+  - swap-backed latency spikes during bursts
+- if you need normal production responsiveness, use a larger instance instead of raising the container limits on this profile
