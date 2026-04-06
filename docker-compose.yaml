@@ -127,6 +127,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
+    healthcheck:
+      test: ["NONE"]
     entrypoint:
       - php
       - -d
