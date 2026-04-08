@@ -60,6 +60,8 @@ services:
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT}
       REDIS_PASSWORD: ${REDIS_PASSWORD}
+      NEXT_PUBLIC_PHONE_PREFIX: ${PHONE_PREFIX}
+      NEXT_PUBLIC_ENVIRONMENT: ${ENV}
     networks:
       backend:
         aliases:
@@ -128,7 +130,7 @@ services:
       redis:
         condition: service_started
     healthcheck:
-      test: ["NONE"]
+      test: [ "NONE" ]
     entrypoint:
       - php
       - -d
