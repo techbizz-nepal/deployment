@@ -49,7 +49,7 @@ Happy coding, and enjoy your streamlined development and deployment process! ðŸ˜
 
 ## Small Instance Notes
 
-- the committed production compose file is tuned for a low-cost single-node EC2 host such as `t3.small`, prioritizing modest breathing room over micro-instance survival
+- the committed production compose file is tuned for a low-cost single-node EC2 host such as `t2.small`, prioritizing memory breathing room while staying inside a `1 vCPU` budget
 - this profile assumes:
   - low traffic
   - Redis-backed queues remain enabled
@@ -61,4 +61,4 @@ Happy coding, and enjoy your streamlined development and deployment process! ðŸ˜
   - queue/import jobs still remain capacity-sensitive
   - safe concurrency is still low
   - large imports or bursty admin operations can still create pressure
-- if the stack still feels memory-tight or background jobs become routine, move to `t3.medium` instead of continuing to raise caps on this profile
+- if the stack still feels CPU-tight or background jobs become routine, move to `t3.small` or `t3.medium` instead of continuing to raise caps on this profile

@@ -13,7 +13,7 @@ services:
     networks:
       - backend
     mem_limit: 96m
-    cpus: 0.15
+    cpus: 0.10
 
   nginx:
     container_name: "${PROJECT_NAME}_nginx"
@@ -34,7 +34,7 @@ services:
       - backend
       - frontend
     mem_limit: 48m
-    cpus: 0.10
+    cpus: 0.05
   consumer:
     container_name: "${PROJECT_NAME}_consumer"
     image: "${PROJECT_NAME}/consumer:latest-${ARCHITECTURE}"
@@ -47,7 +47,7 @@ services:
       frankenphp:
         condition: service_healthy
     mem_limit: 96m
-    cpus: 0.15
+    cpus: 0.10
   vendor:
     container_name: "${PROJECT_NAME}_vendor"
     image: "${PROJECT_NAME}/vendor:latest-${ARCHITECTURE}"
@@ -70,7 +70,7 @@ services:
       frankenphp:
         condition: service_healthy
     mem_limit: 128m
-    cpus: 0.20
+    cpus: 0.10
   frankenphp:
     container_name: "${PROJECT_NAME}_frankenphp"
     image: "${PROJECT_NAME}/frankenphp:latest-${ARCHITECTURE}"
@@ -110,7 +110,7 @@ services:
       - caddy_data:/data
       - caddy_config:/config
     mem_limit: 384m
-    cpus: 0.70
+    cpus: 0.35
 
   queue-worker:
     container_name: "${PROJECT_NAME}_queue-worker"
@@ -146,7 +146,7 @@ services:
       - --max-jobs=50
       - --max-time=1800
     mem_limit: 224m
-    cpus: 0.30
+    cpus: 0.10
 
   pgbouncer:
     container_name: "${PROJECT_NAME}_pgbouncer"
@@ -192,7 +192,7 @@ services:
     ports:
       - 5432:5432
     mem_limit: 384m
-    cpus: 0.35
+    cpus: 0.15
 
 networks:
   backend:
