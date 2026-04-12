@@ -12,8 +12,8 @@ services:
       - ./redis/data:/var/lib/redis/
     networks:
       - backend
-    mem_limit: 64m
-    cpus: 0.10
+    mem_limit: 96m
+    cpus: 0.15
 
   nginx:
     container_name: "${PROJECT_NAME}_nginx"
@@ -33,8 +33,8 @@ services:
     networks:
       - backend
       - frontend
-    mem_limit: 32m
-    cpus: 0.05
+    mem_limit: 48m
+    cpus: 0.10
   consumer:
     container_name: "${PROJECT_NAME}_consumer"
     image: "${PROJECT_NAME}/consumer:latest-${ARCHITECTURE}"
@@ -46,8 +46,8 @@ services:
     depends_on:
       frankenphp:
         condition: service_healthy
-    mem_limit: 64m
-    cpus: 0.10
+    mem_limit: 96m
+    cpus: 0.15
   vendor:
     container_name: "${PROJECT_NAME}_vendor"
     image: "${PROJECT_NAME}/vendor:latest-${ARCHITECTURE}"
@@ -69,8 +69,8 @@ services:
     depends_on:
       frankenphp:
         condition: service_healthy
-    mem_limit: 80m
-    cpus: 0.10
+    mem_limit: 128m
+    cpus: 0.20
   frankenphp:
     container_name: "${PROJECT_NAME}_frankenphp"
     image: "${PROJECT_NAME}/frankenphp:latest-${ARCHITECTURE}"
@@ -86,7 +86,7 @@ services:
       - -d
       - variables_order=EGPCS
       - -d
-      - memory_limit=128M
+      - memory_limit=256M
       - artisan
       - octane:frankenphp
       - --host=*.larashops.local
@@ -109,8 +109,8 @@ services:
     volumes:
       - caddy_data:/data
       - caddy_config:/config
-    mem_limit: 160m
-    cpus: 0.35
+    mem_limit: 384m
+    cpus: 0.70
 
   queue-worker:
     container_name: "${PROJECT_NAME}_queue-worker"
@@ -134,7 +134,7 @@ services:
     entrypoint:
       - php
       - -d
-      - memory_limit=96M
+      - memory_limit=192M
       - artisan
       - queue:work
       - redis
@@ -142,11 +142,11 @@ services:
       - --sleep=1
       - --tries=1
       - --timeout=3600
-      - --memory=64
+      - --memory=160
       - --max-jobs=50
       - --max-time=1800
-    mem_limit: 96m
-    cpus: 0.10
+    mem_limit: 224m
+    cpus: 0.30
 
   pgbouncer:
     container_name: "${PROJECT_NAME}_pgbouncer"
@@ -162,7 +162,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    mem_limit: 20m
+    mem_limit: 32m
     cpus: 0.05
     healthcheck:
       test: [ "CMD", "pg_isready", "-h", "localhost", "-p", "6432", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}" ]
@@ -191,8 +191,8 @@ services:
       - backend
     ports:
       - 5432:5432
-    mem_limit: 192m
-    cpus: 0.15
+    mem_limit: 384m
+    cpus: 0.35
 
 networks:
   backend:

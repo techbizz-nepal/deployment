@@ -47,17 +47,18 @@ Happy coding, and enjoy your streamlined development and deployment process! ðŸ˜
 - the application container and worker both read the same queue connection so import processing can dispatch from web requests and complete in the background
 - if you intentionally force `QUEUE_CONNECTION=sync`, imports still work, but they run inline and you lose the intended background progress behavior
 
-## Micro Instance Notes
+## Small Instance Notes
 
-- the committed production compose file is tuned to survive on a very small single-node EC2 host such as `t2.micro`, prioritizing uptime over throughput
+- the committed production compose file is tuned for a low-cost single-node EC2 host such as `t3.small`, prioritizing modest breathing room over micro-instance survival
 - this profile assumes:
-  - very low traffic
+  - low traffic
   - Redis-backed queues remain enabled
-  - a dedicated `queue-worker` still runs, but at reduced memory and throughput
-  - host swap is configured (`1-2 GB` recommended)
+  - a dedicated `queue-worker` still runs
+  - Postgres remains on the same box
+  - host swap is still configured (`1-2 GB` recommended)
 - expected tradeoffs:
-  - slower web responses under pressure
-  - slower queue/import completion
-  - very low safe concurrency
-  - swap-backed latency spikes during bursts
-- if you need normal production responsiveness, use a larger instance instead of raising the container limits on this profile
+  - workable day-to-day responsiveness for a development-stage environment
+  - queue/import jobs still remain capacity-sensitive
+  - safe concurrency is still low
+  - large imports or bursty admin operations can still create pressure
+- if the stack still feels memory-tight or background jobs become routine, move to `t3.medium` instead of continuing to raise caps on this profile
