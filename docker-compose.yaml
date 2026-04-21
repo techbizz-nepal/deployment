@@ -80,7 +80,8 @@ services:
       USER_AGENT_KEY: "BazzarifyConsumer"
       X_APP_KEY: ${X_APP_KEY}
       QUEUE_CONNECTION: ${QUEUE_CONNECTION:-redis}
-      PHP_POST_MAX_SIZE: 32M
+      PHP_POST_MAX_SIZE: 64M
+      PHP_UPLOAD_MAX_FILESIZE: 64M
     entrypoint:
       - php
       - -d
@@ -121,7 +122,8 @@ services:
       USER_AGENT_KEY: "BazzarifyConsumer"
       X_APP_KEY: ${X_APP_KEY}
       QUEUE_CONNECTION: ${QUEUE_CONNECTION:-redis}
-      PHP_POST_MAX_SIZE: 32M
+      PHP_POST_MAX_SIZE: 64M
+      PHP_UPLOAD_MAX_FILESIZE: 64M
     networks:
       - backend
     depends_on:
