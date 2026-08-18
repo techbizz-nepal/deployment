@@ -39,6 +39,33 @@ services:
     mem_limit: 120m
     cpus: 0.20
 
+  storage-link:
+    container_name: "${PROJECT_NAME}_storage-link"
+    image: "${PROJECT_NAME}/frankenphp:latest-${ARCHITECTURE}"
+    build:
+      context: ./src/backend
+      dockerfile: dev.Dockerfile
+      args:
+        - GITHUB_TOKEN=${GITHUB_TOKEN}
+    env_file:
+      - src/backend/.env.local
+    environment:
+      PHP_POST_MAX_SIZE: 64M
+      PHP_IDE_CONFIG: "serverName=gravity"
+      USER_AGENT_KEY: "BazzarifyConsumer"
+      X_APP_KEY: "cxsQ3kyvU91Bgf7bks8dszQKdibdj83zyVOXEF99qww="
+      QUEUE_CONNECTION: "redis"
+    networks:
+      - backend
+    entrypoint:
+      - php
+      - -d
+      - variables_order=EGPCS
+      - artisan
+      - storage:link
+    volumes:
+      - ${API_SRC}:/app
+
   frankenphp:
     container_name: "${PROJECT_NAME}_frankenphp"
     image: "${PROJECT_NAME}/frankenphp:latest-${ARCHITECTURE}"
@@ -71,6 +98,8 @@ services:
     depends_on:
       pgbouncer:
         condition: service_healthy
+      storage-link:
+        condition: service_completed_successfully
     entrypoint:
       - php
       - -d
@@ -112,6 +141,8 @@ services:
         condition: service_started
       pgbouncer:
         condition: service_healthy
+      storage-link:
+        condition: service_completed_successfully
     entrypoint:
       - php
       - artisan
