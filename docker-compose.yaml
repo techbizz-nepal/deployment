@@ -83,17 +83,12 @@ services:
       PHP_POST_MAX_SIZE: 64M
       PHP_UPLOAD_MAX_FILESIZE: 64M
     entrypoint:
-      - php
-      - -d
-      - variables_order=EGPCS
-      - -d
-      - memory_limit=256M
-      - artisan
-      - octane:frankenphp
-      - --host=*.larashops.local
-      - --port=8081
-      - --caddyfile=/etc/caddy/Caddyfile
-      - --workers=1
+      - /bin/sh
+      - -c
+      - >-
+        php -d variables_order=EGPCS -d memory_limit=256M artisan vendor:ensure-onboarding-bootstrap
+        && exec php -d variables_order=EGPCS -d memory_limit=256M artisan octane:frankenphp
+        --host=*.larashops.local --port=8081 --caddyfile=/etc/caddy/Caddyfile --workers=1
     networks:
       backend:
         aliases:
