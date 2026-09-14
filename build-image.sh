@@ -35,15 +35,15 @@ esac
 case "$service_name" in
   "nginx")
     image_name="techbizz/nginx:latest-$platform_arch"
-    context_path="/Users/apache/techbizz/bazzarify-docker/nginx"
+    context_path="/Users/apache/techbizz/bazzarify/infra/nginx"
     ;;
   "consumer")
     image_name="techbizz/consumer:latest-$platform_arch"
-    context_path="/Users/apache/techbizz/bazzarify-consumer"
+    context_path="/Users/apache/techbizz/bazzarify/src/consumer"
     ;;
   "vendor")
     image_name="techbizz/vendor:latest-$platform_arch"
-    context_path="/Users/apache/techbizz/bazzarify-vendor"
+    context_path="/Users/apache/techbizz/bazzarify/src/vendor"
     ;;
   # "webhook")
   #   image_name="techbizz/webhook:latest"
@@ -51,15 +51,15 @@ case "$service_name" in
   #   ;;
   "frankenphp")
     image_name="techbizz/frankenphp:latest-$platform_arch"
-    context_path="/Users/apache/techbizz/bazzarify-docker/src/backend"
+    context_path="/Users/apache/techbizz/bazzarify/src/backend"
     ;;
   "postgres")
     image_name="techbizz/postgres:latest-$platform_arch"
-    context_path="/Users/apache/techbizz/bazzarify-docker/postgres"
+    context_path="/Users/apache/techbizz/bazzarify/infra/postgres"
     ;;
   "postgres18")
     image_name="techbizz/postgres18:latest-$platform_arch"
-    context_path="/Users/apache/techbizz/bazzarify-docker/postgres18"
+    context_path="/Users/apache/techbizz/bazzarify/infra/postgres18"
     ;;
   *)
     echo "Error: Service name '$service_name' not recognized."

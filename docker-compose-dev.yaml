@@ -3,7 +3,7 @@ services:
     container_name: "${PROJECT_NAME}_static-runner"
     image: "${PROJECT_NAME}/frankenphp:static-gnu"
     build:
-      context: ./src/backend
+      context: ../src/backend
       dockerfile: static.Dockerfile
       args:
         - GITHUB_TOKEN=${GITHUB_TOKEN}
@@ -43,12 +43,12 @@ services:
     container_name: "${PROJECT_NAME}_storage-link"
     image: "${PROJECT_NAME}/frankenphp:latest-${ARCHITECTURE}"
     build:
-      context: ./src/backend
+      context: ../src/backend
       dockerfile: dev.Dockerfile
       args:
         - GITHUB_TOKEN=${GITHUB_TOKEN}
     env_file:
-      - src/backend/.env.local
+      - ../src/backend/.env.local
     environment:
       PHP_POST_MAX_SIZE: 64M
       PHP_IDE_CONFIG: "serverName=gravity"
@@ -70,7 +70,7 @@ services:
     container_name: "${PROJECT_NAME}_frankenphp"
     image: "${PROJECT_NAME}/frankenphp:latest-${ARCHITECTURE}"
     build:
-      context: ./src/backend
+      context: ../src/backend
       dockerfile: dev.Dockerfile
       args:
         - GITHUB_TOKEN=${GITHUB_TOKEN}
@@ -82,7 +82,7 @@ services:
       X_APP_KEY: "cxsQ3kyvU91Bgf7bks8dszQKdibdj83zyVOXEF99qww="
       QUEUE_CONNECTION: "redis"
     env_file:
-      - src/backend/.env.local
+      - ../src/backend/.env.local
     networks:
       backend:
         aliases:
@@ -121,7 +121,7 @@ services:
     container_name: "${PROJECT_NAME}_queue-worker"
     image: "${PROJECT_NAME}/frankenphp:latest-${ARCHITECTURE}"
     build:
-      context: ./src/backend
+      context: ../src/backend
       dockerfile: dev.Dockerfile
       args:
         - GITHUB_TOKEN=${GITHUB_TOKEN}
@@ -133,7 +133,7 @@ services:
       X_APP_KEY: "cxsQ3kyvU91Bgf7bks8dszQKdibdj83zyVOXEF99qww="
       QUEUE_CONNECTION: "redis"
     env_file:
-      - src/backend/.env.local
+      - ../src/backend/.env.local
     networks:
       - backend
     depends_on:
