@@ -57,10 +57,6 @@ case "$service_name" in
     image_name="techbizz/postgres:latest-$platform_arch"
     context_path="/Users/apache/techbizz/bazzarify/infra/postgres"
     ;;
-  "postgres18")
-    image_name="techbizz/postgres18:latest-$platform_arch"
-    context_path="/Users/apache/techbizz/bazzarify/infra/postgres18"
-    ;;
   *)
     echo "Error: Service name '$service_name' not recognized."
     exit 1
