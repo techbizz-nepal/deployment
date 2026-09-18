@@ -143,6 +143,10 @@ services:
         condition: service_healthy
       storage-link:
         condition: service_completed_successfully
+    # The shared FrankenPHP image probes :2019/metrics, which this CLI worker
+    # does not serve. Match production and disable that inherited check.
+    healthcheck:
+      test: [ "NONE" ]
     entrypoint:
       - php
       - artisan
