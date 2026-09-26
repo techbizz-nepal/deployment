@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Check if the service name is provided as an argument
 if [ -z "$1" ]; then
@@ -66,18 +67,17 @@ esac
 
 # Build the Docker image
 echo "Building Docker image: $image_name"
-docker buildx build --platform="$platform" -t "$image_name" "$context_path"
-
-if [ $? -eq 0 ]; then
+if docker buildx build --platform="$platform" -t "$image_name" "$context_path"; then
   echo "Docker image '$image_name' built successfully."
   # if argument is given as amd push to docker hub
   if [ "$platform_arch" == "amd" ]; then
     docker push "$image_name"
-    docker image rm $image_name
+    docker image rm "$image_name"
     echo "Docker image '$image_name' pushed to Docker Hub successfully."
   fi
 else
   echo "Error building Docker image '$image_name'."
+  exit 1
 fi
 
 exit 0
