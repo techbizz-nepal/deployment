@@ -62,6 +62,7 @@ services:
       REDIS_PASSWORD: ${REDIS_PASSWORD}
       NEXT_PUBLIC_PHONE_PREFIX: ${PHONE_PREFIX}
       NEXT_PUBLIC_ENVIRONMENT: ${ENV}
+      TENANT_CONTEXT_NEUTRAL_HOSTS: ${TENANT_CONTEXT_NEUTRAL_HOSTS:-localhost,127.0.0.1,local-ne.larashops.local,vendor.bazarify.local,admin.bazarify.local,vendor.bazzarify.local,admin.bazzarify.local,vendor.bazarify.com.np,admin.bazarify.com.np}
     networks:
       backend:
         aliases:
@@ -79,6 +80,8 @@ services:
       REDIS_PASSWORD: ${REDIS_PASSWORD}
       USER_AGENT_KEY: "BazzarifyConsumer"
       X_APP_KEY: ${X_APP_KEY}
+      TENANT_BASE_DOMAIN: ${TENANT_BASE_DOMAIN:-bazzarify.local}
+      TENANT_CONTEXT_NEUTRAL_HOSTS: ${TENANT_CONTEXT_NEUTRAL_HOSTS:-localhost,127.0.0.1,local-ne.larashops.local,vendor.bazarify.local,admin.bazarify.local,vendor.bazzarify.local,admin.bazzarify.local,vendor.bazarify.com.np,admin.bazarify.com.np}
       QUEUE_CONNECTION: ${QUEUE_CONNECTION:-redis}
       PHP_POST_MAX_SIZE: 64M
       PHP_UPLOAD_MAX_FILESIZE: 64M
@@ -121,6 +124,8 @@ services:
       REDIS_PASSWORD: ${REDIS_PASSWORD}
       USER_AGENT_KEY: "BazzarifyConsumer"
       X_APP_KEY: ${X_APP_KEY}
+      TENANT_BASE_DOMAIN: ${TENANT_BASE_DOMAIN:-bazzarify.local}
+      TENANT_CONTEXT_NEUTRAL_HOSTS: ${TENANT_CONTEXT_NEUTRAL_HOSTS:-localhost,127.0.0.1,local-ne.larashops.local,vendor.bazarify.local,admin.bazarify.local,vendor.bazzarify.local,admin.bazzarify.local,vendor.bazarify.com.np,admin.bazarify.com.np}
       QUEUE_CONNECTION: ${QUEUE_CONNECTION:-redis}
       PHP_POST_MAX_SIZE: 64M
       PHP_UPLOAD_MAX_FILESIZE: 64M
